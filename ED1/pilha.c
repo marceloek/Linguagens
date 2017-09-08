@@ -24,11 +24,12 @@ int main(){
 				system("clear");
 				if (pilha->topo < MAX-1){
 					scanf("%d", (pilha->info+(++pilha->topo)));
+					system("clear");
 				}
 				else
 					puts("A pilha esta cheia!!!");
-				system("clear");
 				break;
+				system("clear");
 			case 2:
 				system("clear");
 				if (pilha->topo > -1){
