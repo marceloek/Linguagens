@@ -10,8 +10,9 @@ typedef struct _pilha{
 int main(){
 	int n, i;
 	tp_pilha *pilha = (tp_pilha*)malloc(sizeof(tp_pilha));
+	pilha->topo=-1;
 	do{
-		puts("MENU\n");
+		puts("\t\tMENU\n");
 		puts("1- Inserir um elemento na pilha;");
 		puts("2- Extrair um elemento da pilha;");
 		puts("3- Mostra os valores da pilha;");
@@ -22,8 +23,7 @@ int main(){
 			case 1:
 				system("clear");
 				if (pilha->topo < MAX-1){
-					scanf("%d", (pilha->info+1));
-					pilha->topo++;
+					scanf("%d", (pilha->info+(++pilha->topo)));
 				}
 				else
 					puts("A pilha esta cheia!!!");
@@ -36,13 +36,13 @@ int main(){
 				}
 				else
 					puts("A pilha esta vazia!!!");
-				
 				break;
 			case 3:
 				system("clear");
 				for(i=MAX-1;i>=0;i--){
-					printf("%d", *(pilha->info+i));
+					printf("Posicao %d: %d\n", i, *(pilha->info+i));
 				}
+				puts("");
 				break;
 			case 0:
 				system("clear");
@@ -52,5 +52,6 @@ int main(){
 				puts("Opcao invalida!");
 		}
 	}while(n!=0);
+	free(pilha);
 	return 0;
 }
