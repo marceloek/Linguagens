@@ -40,7 +40,7 @@ int main(){
 				break;
 			case 3:
 				system("clear");
-				for(i=MAX-1;i>=0;i--){
+				for(i=pilha->topo;i>=0;i--){
 					printf("Posicao %d: %d\n", i, *(pilha->info+i));
 				}
 				puts("");
