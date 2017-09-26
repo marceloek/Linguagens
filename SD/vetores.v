@@ -7,7 +7,6 @@ module multv(
     output [19:0] saida
 );
 
-
 reg [19:0] acumulador = 0;
 assign saida = acumulador;
 
@@ -57,7 +56,7 @@ initial begin
     y <= 6;
     #4
     enable <= 0;
-   #100;
+    #100;
     $finish;
 end    
 
