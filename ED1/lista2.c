@@ -21,10 +21,9 @@ typedef struct lista{
 	nodo *last;
 }lista;
 
-nodo *push(nodo *atual, lista cabeca){
+lista *push(lista *cabeca){
 	nodo *new = (nodo*)malloc(sizeof(nodo));
-	new->next=cabeca.last;
-	cabeca.nItens++;
+	new->prev=cabeca->last;
 	system("clear");
 	getchar();
 	printf("Codigo do produto: ");
@@ -35,63 +34,75 @@ nodo *push(nodo *atual, lista cabeca){
 	getchar();
 	printf("Preco do produto: R$ ");
 	scanf("%f", &new->info.preco);
+	if(cabeca->nItens==0){
+		cabeca->first=new;
+		cabeca->last=new;
+	}
+	else
+		cabeca->last=new;
+	cabeca->nItens++;
 	system("clear");
-	return new;
+	return cabeca;
 }
 
-nodo *pop(nodo *atual, lista cabeca){
-	cabeca.nItens--;
+lista *pop(lista *cabeca){
 	system("clear");
-	if(atual==NULL){
+	if(cabeca->nItens==0){
 		printf("A lista esta vazia!\n");
 		return NULL;
 	}
-	else{
 	int n;
 	printf("Digite o codigo do produto que deseja remover: ");
 	scanf("%d", &n);
-	nodo *ant, *qlq;
-	for(qlq=atual;qlq!=NULL;qlq=qlq->next){
-		if(qlq->info.codigo==n)
+	lista *ant, *aux;
+	for(aux=cabeca;aux->last!=NULL;aux->last=aux->last->next){
+		if(aux->last->info.codigo==n)
 			break;
-		ant=qlq;
+		ant=aux;
 	}
-	if(qlq==NULL){
-		printf("Codigo do produto não encontrado!\n");
+	if(aux->last==NULL){
+		puts("Codigo do produto não encontrado!");
 	}
-	else if(qlq==atual){
-		atual=atual->next;
+	else if(aux->last==cabeca->last){
+		cabeca->last=cabeca->last->next;
 		printf("Produto com codigo [%d] foi removido com sucesso!\n", n);
-	}
-	else{
-		ant->next = qlq->next;
+	}else{
+		ant->last->next = aux->last->next;
+		aux->last->prev = ant->last;
 		printf("Produto com codigo [%d] foi removido com sucesso!\n", n);
 	}
 	puts("");
-	free(qlq);
-	return atual;
-	}
+	cabeca->nItens--;
+	free(aux);
+	return cabeca;
 }
 
-void display(nodo *atual){
+void display(lista *cabeca){
 	system("clear");
-	if(atual==NULL){
+	if(cabeca->nItens==0){
 		printf("A lista esta vazia!\n");
 	}
 	else{
-		for(atual=atual;atual!=NULL;atual=atual->next){
+		int a=cabeca->nItens;
+		lista *aux = (lista*)malloc(sizeof(lista));
+		for(aux=cabeca;aux->last!=NULL;aux->last=aux->last->prev){
 			puts("----------------------------------------------------------");
-			printf("Informacoes do Produto:\nCodigo: %d\n", (atual->info.codigo));
-			printf("Nome: %s\nPreco: R$ %.2f\n", (atual->info.nome), (atual->info.preco));
-			puts("----------------------------------------------------------");
+			printf("Informacoes do Produto [%d]:\nCodigo: %d\n", a, (aux->last->info.codigo));
+			printf("Nome: %s\nPreco: R$ %.2f\n", (aux->last->info.nome), (aux->last->info.preco));
+			a--;
 		}
+		puts("----------------------------------------------------------");
+		printf("%d", cabeca->nItens);
 	}
+	puts("");
 }
 
 int main(){
-	lista cabeca;
+	lista *cabeca = (lista*)malloc(sizeof(lista));
+	cabeca->last = NULL;
+	cabeca->first = NULL;
+	cabeca->nItens = 0;
 	int n;
-	nodo *atual = NULL;
 	do{
 		puts("\t\tMENU\n");
 		puts("(1) Para inserir um produto na pilha;");
@@ -102,15 +113,14 @@ int main(){
 		scanf("%d", &n);
 		switch(n){
 			case 1:
-				atual=push(atual,cabeca);
+				cabeca=push(cabeca);
 				break;
 				system("clear");
 			case 2:
-				atual=pop(atual,cabeca);
+				cabeca=pop(cabeca);
 				break;
 			case 3:
-				display(atual);
-				puts("");
+				display(cabeca);
 				break;
 			case 0:
 				system("clear");
@@ -121,6 +131,6 @@ int main(){
 				puts("Opcao invalida!");
 		}
 	}while(n!=0);
-	free(atual);
+	free(cabeca);
 	return 0;
 }
