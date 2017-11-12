@@ -95,9 +95,11 @@ lista *pop(lista *cabeca){
 
 					}
 					else{
-						ant=cabeca->last->prev;
+						ant=cabeca->last;
+						cabeca->last=cabeca->last->prev;
+						cabeca->last->next=ant->next;
 						cabeca->last=cabeca->last->next;
-						cabeca->last->prev=ant;
+						cabeca->last->prev=ant->prev;
 						while(cabeca->last->next!=NULL)
 							cabeca->last=cabeca->last->next;
 						cabeca->nItens--;
