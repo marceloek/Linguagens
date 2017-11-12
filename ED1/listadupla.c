@@ -148,9 +148,9 @@ int main(){
 	int n;
 	do{
 		puts("\t\tMENU\n");
-		puts("(1) Para inserir um produto na pilha;");
-		puts("(2) Para extrair um elemento da pilha;");
-		puts("(3) Para listar todos os campos dos elementos da pilha;");
+		puts("(1) Para inserir um produto na lista;");
+		puts("(2) Para extrair um elemento da lista;");
+		puts("(3) Para listar todos os campos dos elementos da lista;");
 		puts("(0) Sair.\n");
 		printf("Digite o numero correspondente a opcao: ");
 		scanf("%d", &n);
