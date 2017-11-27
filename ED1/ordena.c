@@ -257,9 +257,8 @@ int main(){
 		scanf("%d", &n);
 		switch(n){
 			case 1:
-				cabeca=push(cabeca);
+				push(cabeca);
 				break;
-				system("cls");
 			case 2:
 				pop(cabeca);
 				break;
