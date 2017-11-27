@@ -49,7 +49,7 @@ void push(lista *cabeca){
 		cabeca->last->next= NULL;
 	}cabeca->nItens++;
 	system("cls");
-	return cabeca;
+	return;
 }
 
 void pop(lista *cabeca){
@@ -74,8 +74,6 @@ void pop(lista *cabeca){
 					cabeca->last=cabeca->last->next;
 					cabeca->first=cabeca->last;
 					cabeca->last->prev = NULL;
-					while(cabeca->last->next!=NULL)
-						cabeca->last=cabeca->last->next;
 					cabeca->nItens--;
 					printf("Produto com codigo [%d] foi removido com sucesso!\n", n);
 					return;
@@ -91,11 +89,8 @@ void pop(lista *cabeca){
 					cabeca->last->next=ant->next;
 					cabeca->last=cabeca->last->next;
 					cabeca->last->prev=ant->prev;
-					while(cabeca->last->next!=NULL)
-						cabeca->last=cabeca->last->next;
 					cabeca->nItens--;
 					printf("Produto com codigo [%d] foi removido com sucesso!\n", n);
-					free(ant);
 					return;
 				}
 			}
@@ -108,8 +103,7 @@ void display(lista *cabeca){
 	if(cabeca->last==NULL){
 		printf("A lista esta vazia!\n");
 		return;
-	}
-	else{
+	}else{
 		lista aux = *cabeca;
 		int a=1;
 		for(;cabeca->first!=NULL;cabeca->first=cabeca->first->next){
@@ -117,8 +111,7 @@ void display(lista *cabeca){
 			printf("Informacoes do Produto [%d]:\nCodigo: %d\n", a, (cabeca->first->info.codigo));
 			printf("Nome: %s\nPreco: R$ %.2f\n", (cabeca->first->info.nome), (cabeca->first->info.preco));
 			a++;
-		}
-		puts("----------------------------------------------------------");
+		}puts("----------------------------------------------------------");
 		printf("Numero de itens: %d\n", cabeca->nItens);
 		puts("");
 		*cabeca=aux;
@@ -266,7 +259,6 @@ int main(){
 				display(cabeca);
 				break;
 			case 4:
-				system("cls");
 				insertionSort(cabeca);
 				break;
 			/*case 5:
