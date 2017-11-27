@@ -1,8 +1,7 @@
-
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-//#include<stdio_ext.h>
+#include<stdio_ext.h>
 #define TAM 50
 
 typedef struct _produto{
