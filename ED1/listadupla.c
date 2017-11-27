@@ -21,15 +21,14 @@ typedef struct lista{
 	nodo *last;
 }lista;
 
-lista *push(lista *cabeca){
+void push(lista *cabeca){
 	nodo *new = (nodo*)malloc(sizeof(nodo));
 	if(cabeca->nItens==0)
 		cabeca->last=new;
 	else{
 		new->prev=cabeca->last;
 		cabeca->last->next=new;
-	}
-	system("clear");
+	}system("clear");
 	getchar();
 	printf("Codigo do produto: ");
 	scanf("%d", &new->info.codigo);
@@ -46,14 +45,12 @@ lista *push(lista *cabeca){
 		cabeca->first->next= NULL;
 		cabeca->last->prev= NULL;
 		cabeca->last->next= NULL;
-	}
-	else{
+	}else{
 		cabeca->last=new;
 		cabeca->last->next= NULL;
-	}
-	cabeca->nItens++;
+	}cabeca->nItens++;
 	system("clear");
-	return cabeca;
+	return;
 }
 
 void pop(lista *cabeca){
@@ -138,9 +135,8 @@ int main(){
 		scanf("%d", &n);
 		switch(n){
 			case 1:
-				cabeca=push(cabeca);
+				push(cabeca);
 				break;
-				system("clear");
 			case 2:
 				pop(cabeca);
 				break;
