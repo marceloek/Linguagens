@@ -44,9 +44,7 @@ int main(){
 					getchar();
 					printf("Preco do produto [%d]: R$ ", p->topo);
 					scanf("%f", &((p->info+(p->topo))->preco));
-					system("clear");
-				}
-				else
+				}else
 					puts("A pilha esta cheia!!!");
 				break;
 				system("clear");
