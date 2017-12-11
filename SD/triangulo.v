@@ -18,7 +18,7 @@ assign sinal = (sub5 >= 0) ? 1 : 0;
 endmodule
 
 
-module tstponto (
+module tstpt (
 	input [11:0] pt1X, pt1Y, pt2X, pt2Y, ptX, ptY, pt3X, pt3Y
 	output dentro
 );
