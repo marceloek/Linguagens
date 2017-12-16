@@ -1,4 +1,4 @@
-sdasmodule sinal (
+module sinal (
 	input [11:0] pt1X, pt1Y, pt2X, pt2Y, ptX, ptY
 	output sinal
 );
