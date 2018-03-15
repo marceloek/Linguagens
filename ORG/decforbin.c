@@ -26,7 +26,7 @@ int main(){
 	for(int b=0;b<52;b++) 
 		rnum[b]=0;
 		
-	printf("Digite um numero: "); //digitar o valor de entrada
+	printf("Digite um numero: "); //digitando o valor de entrada
 	scanf("%lf", &tnum);
 	
 	aux = tnum;
