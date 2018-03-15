@@ -47,7 +47,7 @@ int main(){
 	
 	itoa(exp, exp1, 2); //conversao para base 2
 	
-	if(tnum<0)	//printando S(1)	obs: (n)=bits utilizados
+	if(tnum<0) //printando S(1)	obs: (n)=bits utilizados
 		printf("\n| 1 | ");
 	else
 		printf("| 0 | ");
