@@ -17,13 +17,13 @@ void mantissa(double fracao, int rnum[52]){
 }
 
 void fexp(int aux, int exp1[11]){
-  int i=10;
-  while(aux>=2){
-    exp1[i]=aux%2;
-    aux /=2;
-    i--;
-  }
-  exp1[i--]=aux;
+	int i=10;
+	while(aux>=2){
+		exp1[i]=aux%2;
+		aux /=2;
+		i--;
+	}
+	exp1[i--]=aux;
 }
 
 int main(){
@@ -47,7 +47,7 @@ int main(){
 	//divisao sucessiva maior que 1 para encontrar o numero de bits
 	if(aux>1){
     	while(aux>1){
-			E++;
+    		E++;
 			aux /=2;
 			if(aux/2<1)
 				break;
@@ -75,9 +75,9 @@ int main(){
 	else
 		printf("| 0 | ");
 
-    for(int n=0;n<11;n++)
-        printf("%d", exp1[n]); //printando exp(11)
-    printf(" |");
+	for(int n=0;n<11;n++)
+		printf("%d", exp1[n]); //printando exp(11)
+	printf(" |");
 
 	for(b=0;b<51;b++){
 		printf("%d", rnum[b]); //printando frac(51)
