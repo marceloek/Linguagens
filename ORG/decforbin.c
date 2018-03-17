@@ -48,19 +48,19 @@ int main(){
 	if(aux>1){
     	while(aux>1){
     		E++;
-			aux /=2;
-			if(aux/2<1)
-				break;
+    		aux /=2;
+    		if(aux/2<1)
+    			break;
 		}
 	}
 
 	//multiplicacao sucessiva menor que 1 para encontrar o numero de bits
 	if(aux<1){
     	while(aux<1){
-			E--;
-        	aux *=2;
-			if(aux*2>1)
-				break;
+    		E--;
+    		aux *=2;
+    		if(aux*2>1)
+    			break;
 	    }
 	}
 
