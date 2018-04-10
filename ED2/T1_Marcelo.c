@@ -25,8 +25,8 @@ void att_alt_fb(TpNodo *nodo){
             if(aux->dir == NULL){ //direita nulo
             	aux->fb = -nodo->alt - 1;
             	aux->alt = nodo->alt + 1;
-			}else{ //direita nao nulo
-				aux->fb = aux->dir->alt - nodo->alt;
+            }else{ //direita nao nulo
+            	aux->fb = aux->dir->alt - nodo->alt;
                 if(nodo->alt > aux->dir->alt) //maior
                 	aux->alt = nodo->alt + 1;
                 else //menor
