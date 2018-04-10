@@ -126,12 +126,12 @@ void rotacao_dupla_dir(TpArvore *arvore, TpNodo *avo){
 	aux->pai=aux2;
 	aux->dir=aux->dir;
 	aux->alt=-1;
-   	rotacao_simples_dir(arvore, avo);
+	rotacao_simples_dir(arvore, avo);
 }
 
 void rotacao_dupla_esq(TpArvore *arvore, TpNodo *avo){
 	TpNodo *aux = avo->esq, *aux2 = avo->esq->dir;
-    printf("\nRotacao Dupla A Esquerda\n");
+	printf("\nRotacao Dupla A Esquerda\n");
 	int a=aux->fb;
 	avo->esq=aux2;
 	aux2->pai=avo;
@@ -144,7 +144,7 @@ void rotacao_dupla_esq(TpArvore *arvore, TpNodo *avo){
 	aux->pai=aux2;
 	aux->esq=aux->esq;
 	aux->alt=-1;
-   	rotacao_simples_esq(arvore, avo);
+	rotacao_simples_esq(arvore, avo);
 }
 
 void balancear_arvore(TpArvore *arvore, TpNodo *nodo){
