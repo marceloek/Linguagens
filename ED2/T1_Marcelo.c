@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef struct _nodo{
-	int chave, alt, fb;
+	int chave, alt, fb, cor;
 	struct _nodo *esq;
 	struct _nodo *dir;
 	struct _nodo *pai;
@@ -25,8 +25,8 @@ void att_alt_fb(TpNodo *nodo){
             if(aux->dir == NULL){ //direita nulo
             	aux->fb = -nodo->alt - 1;
             	aux->alt = nodo->alt + 1;
-            }else{ //direita nao nulo
-            	aux->fb = aux->dir->alt - nodo->alt;
+			}else{ //direita nao nulo
+				aux->fb = aux->dir->alt - nodo->alt;
                 if(nodo->alt > aux->dir->alt) //maior
                 	aux->alt = nodo->alt + 1;
                 else //menor
@@ -113,38 +113,88 @@ void rotacao_simples_esq(TpArvore *arvore, TpNodo *avo){
 
 void rotacao_dupla_dir(TpArvore *arvore, TpNodo *avo){
 	TpNodo *aux = avo->dir, *aux2 = avo->dir->esq;
-	printf("\nRotacao Dupla A Direita\n");
-	int a=aux->fb;
-	avo->dir=aux2;
-	aux2->pai=avo;
-	aux->fb=aux2->fb;
-	aux->esq=aux2->dir;
-	aux2->dir=aux;
-	aux2->esq=aux2->esq;
-	aux2->alt=+1;
-	aux2->fb=a;
-	aux->pai=aux2;
-	aux->dir=aux->dir;
-	aux->alt=-1;
-	rotacao_simples_dir(arvore, avo);
+    if(aux2->fb > 0){  //o neto de nodo tem um filho a direita
+    	rotacao_dupla_esq(arvore,aux);
+    	rotacao_simples_dir(arvore,aux2->pai->pai);
+    }
+    else if(aux2->fb < 0){  //o neto de nodo tem um filho a esquerda
+    	rotacao_simples_esq(arvore,aux);
+    	rotacao_simples_dir(arvore,avo);
+    }
+    else{  //resolve o joelho
+    	printf("\nRotacao Dupla A Direita\n");
+    	
+    	if(avo->pai == NULL){
+    		aux2->pai = NULL;
+    		arvore->raiz = aux2;
+    	}
+    	else{
+    		aux2->pai = avo->pai;
+    		if(avo == aux2->pai->dir)
+    			aux2->pai->dir = aux2;
+    		else
+    			aux2->pai->esq = aux2;
+    	}
+    	aux2->esq = avo;
+    	aux2->dir = aux;
+    	aux->esq = NULL;
+    	aux->dir = NULL;
+    	aux->pai = aux2;
+    	avo->pai = aux2;
+    	avo->dir = NULL;
+    	aux->alt = 0;
+    	aux->fb = 0;
+    	if(avo->esq == NULL){
+    		avo->alt = 0;
+    		avo->fb = 0;
+    		att_alt_fb(avo);
+    	}
+    	else
+    		att_alt_fb(avo->esq);
+    }
 }
 
 void rotacao_dupla_esq(TpArvore *arvore, TpNodo *avo){
 	TpNodo *aux = avo->esq, *aux2 = avo->esq->dir;
-	printf("\nRotacao Dupla A Esquerda\n");
-	int a=aux->fb;
-	avo->esq=aux2;
-	aux2->pai=avo;
-	aux->fb=aux2->fb;
-	aux->dir=aux2->esq;
-	aux2->esq=aux;
-	aux2->dir=aux2->dir;
-	aux2->alt=+1;
-	aux2->fb=a;
-	aux->pai=aux2;
-	aux->esq=aux->esq;
-	aux->alt=-1;
-	rotacao_simples_esq(arvore, avo);
+    if(aux2->fb < 0){  //o neto de nodo tem um filho a esquerda
+    	rotacao_dupla_dir(arvore,aux);
+    	rotacao_simples_esq(arvore,aux2->pai->pai);
+    }
+    else if(aux2->fb > 0){  //o neto de nodo tem um filho a direita
+    	rotacao_simples_dir(arvore,aux);
+    	rotacao_simples_esq(arvore,avo);
+    }
+    else{  //resolve o joelho
+    	printf("\nRotacao Dupla A Esquerda\n");
+
+    	if(avo->pai == NULL){
+    		aux2->pai = NULL;
+    		arvore->raiz = aux2;
+    	}
+    	else{
+    		aux2->pai = avo->pai;
+    		if(avo == aux2->pai->dir)
+    			aux2->pai->dir = aux2;
+    		else
+    			aux2->pai->esq = aux2;
+    	}
+    	aux2->dir = avo;
+    	aux2->esq = aux;
+    	aux->dir = NULL;
+    	aux->esq = NULL;
+    	aux->pai = aux2;
+    	avo->pai = aux2;
+    	avo->esq = NULL;
+    	aux->alt = 0;
+    	aux->fb = 0;
+    	if(avo->dir == NULL){
+    		avo->alt = 0;
+    		avo->fb = 0;
+    		att_alt_fb(avo);
+    	}
+    	else
+    		att_alt_fb(avo->dir);
+    }
 }
 
 void balancear_arvore(TpArvore *arvore, TpNodo *nodo){
@@ -186,7 +236,9 @@ void inserir(TpArvore *arvore, int key){
 	new->esq=NULL;
 	new->alt=0;
 	new->fb=0;
+	new->cor=0;
 	if(arvore->raiz == NULL){ //raiz nula
+		new->cor = 1;
 		new->pai = NULL;
 		arvore->raiz = new;
 	}
@@ -200,7 +252,7 @@ void inserir(TpArvore *arvore, int key){
 		pai->dir = new;	
 		att_alt_fb(new);
 	}
-	balancear_arvore(arvore, new);
+	//balancear_arvore(arvore, new);
 	printf("O valor foi inserido com sucesso!\n\n");
 }
 
@@ -216,6 +268,7 @@ void exibirNivel(TpNodo *nodo, int i, int nivel){
         	printf("(NIL)");
         else
         	printf("(%d), ", nodo->pai->chave);
+        printf(" %d ", nodo->cor);
     }
     else if(i > nivel)
     	return;
