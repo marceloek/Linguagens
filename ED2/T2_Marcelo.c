@@ -46,105 +46,125 @@ void att_alt(TpNodo *nodo){
     }
 }
 
-void case1(TpNodo *nodo, int p){
-	printf("<< CASE 1 >>\n");
-	nodo->pai->pai->dir->cor = 1;
-	nodo->pai->pai->esq->cor = 1;
-	nodo->pai->pai->cor = 0;
+void case1(TpArvore *arvore, TpNodo *nodo){
+	printf("case1");
 	TpNodo *avo = nodo->pai->pai;
+	avo->dir->cor = 1;
+	avo->esq->cor = 1;
+	avo->cor = 0;
 	if(avo->pai == NULL) 
 		avo->cor = 1;
-	else
-		balancear(avo, p);
 }
 
-void case3(TpNodo *nodo, int p){
-	printf("<< CASE 3 >>\n");
+void case3(TpArvore *arvore, TpNodo *nodo, int p){
+	printf("case3");
 	TpNodo *pai = nodo->pai;
 	if(p==1){ //tio esq
-		nodo->pai->cor = 1;
-		if(nodo->pai->pai->cor == 0)
-			nodo->pai->pai->cor = 1;
+		if(pai->cor == 0)
+			pai->cor = 1;
 		else
-			nodo->pai->pai->cor = 0;
-		nodo->pai = NULL;
+			pai->cor = 0;
+		nodo->cor = 1;
+		//nodo->alt++;
+		if(pai->pai == NULL){
+			nodo->pai = NULL;
+			arvore->raiz = nodo;
+		}else
+			nodo->pai=pai->pai;
 		pai->dir = nodo->esq;
 		nodo->esq = pai;
+		pai->pai = nodo;
+		if(pai->esq != NULL)  //pega a folha a esquerda e atualiza o fb e a altura
+			att_alt(pai->esq);
+		else if(pai->dir != NULL)  //pega a folha a direita e atualiza o fb e a altura
+			att_alt(pai->dir);
+		else{  //nodo fica folha
+			pai->alt = 0;
+			att_alt(pai);
+		}
+		//pai->alt=pai->alt - 1;
 	}
 	else if(p==0){ //tio dir
-		nodo->pai->cor = 1;
-		if(nodo->pai->pai->cor == 0)
-			nodo->pai->pai->cor = 1;
+		if(pai->cor == 0)
+			pai->cor = 1;
 		else
-			nodo->pai->pai->cor = 0;
-		nodo->pai = NULL;
+			pai->cor = 0;
+		nodo->cor = 1;
+		//nodo->alt++;
+		if(pai->pai == NULL){
+			nodo->pai = NULL;
+			arvore->raiz = nodo;
+		}else
+			nodo->pai=pai->pai;
 		pai->esq = nodo->dir;
 		nodo->dir = pai;
-		
+		pai->pai = nodo;
+		if(pai->dir != NULL) //pega a folha a direita e atualiza o Fb e a altura
+			att_alt(pai->dir);
+		else if(pai->esq != NULL)  //pega a folha a esquerda e atualiza o Fb e a altura
+			att_alt(pai->esq);
+		else{  //nodo fica folha
+			pai->alt = 0;
+			att_alt(pai);
+		}
+		//pai->alt=pai->alt - 1;
 	}
 }
 
-void case2(TpNodo *nodo, int p){
-	printf("<< CASE 2 >>\n");
+void case2(TpArvore *arvore, TpNodo *nodo, int p){
+	printf("case2");
 	TpNodo *pai = nodo->pai, *avo = nodo->pai->pai;
-	printf("p = %d", p);
 	if(p==1){ //tio esq
 		nodo->pai = avo;
-		nodo->esq = nodo->esq;
-		pai->esq = nodo->dir;
+		avo->dir = nodo;
+		if(nodo->esq != NULL){
+			pai->esq = nodo->dir;
+			nodo->dir->pai = pai;
+		}else
+			pai->esq = NULL;
 		nodo->dir = pai;
 		pai->pai = nodo;
-		pai->dir = pai->dir;
-		case3(nodo, p);
+		case3(arvore,nodo, 1);
 	}
 	else if(p==0){ //tio dir
 		nodo->pai = avo;
-		nodo->dir = nodo->dir;
-		pai->dir = nodo->esq;
+		avo->esq = nodo;
+		if(nodo->esq != NULL){
+			pai->dir = nodo->esq;
+			nodo->esq->pai = pai;
+		}else
+			pai->dir = NULL;
 		nodo->esq = pai;
 		pai->pai = nodo;
-		pai->esq = pai->esq;
-		case3(nodo, p);
+		case3(arvore,nodo, 0);
 	}
 }
 
-void balancear(TpNodo *nodo, int p){
-	printf("TD OK\n");
+void balancear(TpArvore *arvore, TpNodo *nodo){
 	if(nodo->pai->cor == 0){ //pai red
-		if(nodo->pai->pai->esq->cor == 0 && nodo->pai->pai->dir->cor == 0){ //tio red e pai red
-			case1(nodo,p);
-			printf("TD OK1\n");
-		}
-
-		else if(nodo->pai->dir == nodo){ //caso 2 ->> x a direita
-			if(nodo->pai->pai->dir == nodo->pai){
-				if(nodo->pai->pai->esq->cor == 1 || nodo->pai->pai->esq == NULL){ //tio esq
-					p=1;
-					printf("TD OK2\n");
-					case2(nodo, p);
-				}
+		if(nodo->pai->pai != NULL && nodo->pai->pai->esq != NULL && nodo->pai->pai->esq->cor == 0 && nodo->pai->pai->dir !=NULL && nodo->pai->pai->dir->cor == 0) //tio red e pai red
+			case1(arvore,nodo);
+		else if(nodo->pai->dir == nodo){ //x a direita
+			if(nodo->pai->pai->esq == nodo->pai){
+				if(nodo->pai->pai->dir == NULL || nodo->pai->pai->dir->cor == 1) //case 2 dir (tio dir)
+					case2(arvore, nodo, 0);
 			}
-			else if(nodo->pai->pai->esq == nodo->pai){ 
-				if(nodo->pai->pai->dir->cor == 1 || nodo->pai->pai->dir == NULL){ //tio dir
-					p=0;
-					printf("TD OK2\n");
-					case2(nodo, p);
+			else if(nodo->pai->pai->dir == nodo->pai){ 
+				if(nodo->pai->pai->esq == NULL || nodo->pai->pai->esq->cor == 1){ //case 3 esq (tio esq)
+					nodo = nodo->pai;
+					case3(arvore, nodo, 1);
 				}
 			}
 		}
-		else if(nodo->pai->esq == nodo){ //caso 3 ->> x a esquerda
+		else if(nodo->pai->esq == nodo){ //x a esquerda
 			if(nodo->pai->pai->dir == nodo->pai){
-				if(nodo->pai->pai->esq->cor == 1 || nodo->pai->pai->esq == NULL){ //tio esq
-					p=1;
-					printf("TD OK3\n");
-					case3(nodo, p);
-				}
+				if(nodo->pai->pai->esq == NULL || nodo->pai->pai->esq->cor == 1) //case 2 esq (tio esq)
+					case2(arvore, nodo, 1);
 			}
 			else if(nodo->pai->pai->esq == nodo->pai){
-				if(nodo->pai->pai->dir->cor == 1 || nodo->pai->pai->dir == NULL){ //tio dir
-					p=0;
-					printf("TD OK3\n");
-					case3(nodo, p);
+				if(nodo->pai->pai->dir == NULL || nodo->pai->pai->dir->cor == 1){ //case 3 dir (tio dir)
+					nodo = nodo->pai;
+					case3(arvore, nodo, 0);
 				}
 			}
 		}
@@ -184,12 +204,8 @@ void inserir(TpArvore *arvore, int key){
 		pai->dir = new;
 		att_alt(new);
 	}
-	if(new->pai != NULL && new->pai->pai != NULL){
-		int p=9;
-		balancear(new, p);
-	}
-	printf("a\n");
-	
+	if(new->pai != NULL && new->pai->pai != NULL)
+		balancear(arvore, new);
 	printf("O valor foi inserido com sucesso!\n\n");
 }
 
@@ -204,11 +220,11 @@ void exibirNivel(TpNodo *nodo, int i, int nivel){
         if(nodo->pai == NULL)  //printa raiz
         	printf("(NIL)");
         else
-        	printf("(%d), ", nodo->pai->chave);
+        	printf("(%d) ", nodo->pai->chave);
         if(nodo->cor == 1)
-        	printf(" BLACK ");
+        	printf(" BLACK, ");
         else
-        	printf(" RED ");
+        	printf(" RED, ");
     }
     else if(i > nivel)
     	return;
