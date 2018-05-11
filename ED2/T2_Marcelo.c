@@ -27,7 +27,6 @@ void insere_sentinela(TpNodo *nodo){ //adiciona o sentinela
 }
 void rotacao_direita(TpNodo *aux){
     TpNodo *nodo = aux->esq; //guarda o filho a esquerda
-
     aux->esq = nodo->dir;
     if(aux->esq != NULL)
         aux->esq->pai = aux;
@@ -43,13 +42,11 @@ void rotacao_direita(TpNodo *aux){
         else
             nodo->pai->dir = nodo;
     }
-
     nodo->dir = aux;
     aux->pai = nodo;
 }
 void rotacao_esquerda(TpNodo *aux){
     TpNodo *nodo = aux->dir; //guarda o filho a direita
-
     aux->dir = nodo->esq;
     if(aux->dir != NULL)
         aux->dir->pai = aux;
@@ -65,13 +62,12 @@ void rotacao_esquerda(TpNodo *aux){
         else
             nodo->pai->esq = nodo;
     }
-
     nodo->esq = aux;
     aux->pai = nodo;
 }
 void balancear(TpNodo *nodo){
     TpNodo *aux;
-    while(nodo->pai->cor){ //caso pai e vermelho
+    while(nodo->pai->cor){ //caso pai é vermelho
         if(nodo->pai == nodo->pai->pai->esq){ //arvore tende à esquerda
             aux = nodo->pai->pai->dir;
             if(aux->cor){ //primeiro caso: pai vermelho e tio vermelho
@@ -93,7 +89,6 @@ void balancear(TpNodo *nodo){
         }
         else{ //arvore tende à direita
             aux = nodo->pai->pai->esq;
-
             if(aux->cor){ //primeiro caso: pai vermelho e tio vermelho
                 nodo->pai->cor = 0;
                 aux->cor = 0;
@@ -119,7 +114,6 @@ int altura(TpNodo *nodo){ //determina a altura da arvore
     if(nodo->chave != 0){
         int altE = altura(nodo->esq);
         int altD = altura(nodo->dir);
-
         if(altE < altD)
             return altD + 1;
         else
@@ -129,11 +123,9 @@ int altura(TpNodo *nodo){ //determina a altura da arvore
         return 0;
 }
 void inserir(int val){ //adiciona novo nodo
-    TpNodo *aux = pRaiz, *pai = NULL, *new = (TpNodo*)malloc(sizeof(TpNodo)); //*aux - ponteiros de busca, *g_info - ponteiro para armazenar a informacao
-
-    while(aux != NULL && aux->chave != 0){   //procura o local onde colocar o novo no
-        pai = aux;                        //*g_pai guarda o pai do novo nodo
-
+    TpNodo *aux = pRaiz, *pai = NULL, *new = (TpNodo*)malloc(sizeof(TpNodo));
+    while(aux != NULL && aux->chave != 0){   //procura o local onde colocar o novo nodo
+        pai = aux;                        //pai guarda o pai do novo nodo
         if(val == aux->chave){ //caso o valor seja repetido
 			printf("Esse valor ja esta inserido! Caso queira, tente novamente.\n");
 			return;
@@ -182,7 +174,6 @@ void exibirNivel(TpNodo *nodo, int i, int nivel){ //nivel: nivel desejado para i
                 printf("(VERMELHO, ");
             else
                 printf("(PRETO, ");
-
             printf("%d),", nodo->pai->chave);
         }
     }
