@@ -1,255 +1,213 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 typedef struct _nodo{
-	int chave, alt, cor;
-	struct _nodo *esq;
-	struct _nodo *dir;
-	struct _nodo *pai;
+    int chave, cor;         //cor: 0 = preto, 1 = vermelho
+    struct _nodo *dir;
+    struct _nodo *esq;
+    struct _nodo *pai;
 }TpNodo;
-
-typedef struct _arvore{
-	TpNodo *raiz;
-}TpArvore;
-
-TpArvore *inicializa(){
-	TpArvore *arvore = (TpArvore*)malloc(sizeof(TpArvore));
-	arvore->raiz=NULL;
-	return arvore;
+TpNodo *pRaiz; //guarda a raiz
+void Init(){
+    pRaiz = NULL;
 }
+void insere_sentinela(TpNodo *nodo){ //adiciona o sentinela
+    TpNodo *senD = (TpNodo*)malloc(sizeof(TpNodo)), *senE = (TpNodo*)malloc(sizeof(TpNodo));
+    senD->chave = 0;
+    senD->cor = 0;
+    senD->dir = NULL;
+    senD->esq = NULL;
+    senD->pai = nodo;
+    senE->chave = 0;
+    senE->cor = 0;
+    senE->dir = NULL;
+    senE->esq = NULL;
+    senE->pai = nodo;
+    nodo->dir = senD;
+    nodo->esq = senE;
+}
+void rotacao_direita(TpNodo *aux){
+    TpNodo *nodo = aux->esq; //guarda o filho a esquerda
 
-void att_alt(TpNodo *nodo){
-	TpNodo *aux = nodo->pai;
-    while(aux != NULL){ //percore do no desejado até a raiz
-        if(nodo->chave < aux->chave){ //à esquerda
-            if(aux->dir == NULL){ //direita nulo
-            	aux->alt = nodo->alt + 1;
-			}else{ //direita nao nulo
-                if(nodo->alt > aux->dir->alt) //maior
-                	aux->alt = nodo->alt + 1;
-                else //menor
-                	aux->alt = aux->dir->alt + 1;
+    aux->esq = nodo->dir;
+    if(aux->esq != NULL)
+        aux->esq->pai = aux;
+
+    if(aux->pai == NULL){ //caso seja a raiz
+        nodo->pai = NULL;
+        pRaiz = nodo;
+    }
+    else{
+        nodo->pai = aux->pai;
+        if(aux == nodo->pai->esq)
+            nodo->pai->esq = nodo;
+        else
+            nodo->pai->dir = nodo;
+    }
+
+    nodo->dir = aux;
+    aux->pai = nodo;
+}
+void rotacao_esquerda(TpNodo *aux){
+    TpNodo *nodo = aux->dir; //guarda o filho a direita
+
+    aux->dir = nodo->esq;
+    if(aux->dir != NULL)
+        aux->dir->pai = aux;
+
+    if(aux->pai == NULL){ //caso seja a raiz
+        nodo->pai = NULL;
+        pRaiz = nodo;
+    }
+    else{
+        nodo->pai = aux->pai;
+        if(aux == nodo->pai->dir)
+            nodo->pai->dir = nodo;
+        else
+            nodo->pai->esq = nodo;
+    }
+
+    nodo->esq = aux;
+    aux->pai = nodo;
+}
+void balancear(TpNodo *nodo){
+    TpNodo *aux;
+    while(nodo->pai->cor){ //caso pai e vermelho
+        if(nodo->pai == nodo->pai->pai->esq){ //arvore tende à esquerda
+            aux = nodo->pai->pai->dir;
+            if(aux->cor){ //primeiro caso: pai vermelho e tio vermelho
+                nodo->pai->cor = 0;
+                aux->cor = 0;
+                nodo->pai->pai->cor = 1;
+                nodo = nodo->pai->pai;
+            }
+            else{
+                if(nodo == nodo->pai->dir){ //segundo caso: pai vermelho, tio preto e nodo no filho a direita
+                    nodo = nodo->pai;
+                    rotacao_esquerda(nodo);
+                }
+                //terceiro caso: pai vermelho, tio preto e nodo no filho a esquerda
+                nodo->pai->cor = 0;
+                nodo->pai->pai->cor = 1;
+                rotacao_direita(nodo->pai->pai);
             }
         }
-        else{ //à direita
-            if(aux->esq == NULL){ //esquerda nulo
-            	aux->alt = nodo->alt + 1;
-            }else{ //esquerda nao nulo
-                if(nodo->alt > aux->esq->alt) //maior
-                	aux->alt = nodo->alt + 1;
-                else //menor
-                	aux->alt = aux->esq->alt + 1;
+        else{ //arvore tende à direita
+            aux = nodo->pai->pai->esq;
+
+            if(aux->cor){ //primeiro caso: pai vermelho e tio vermelho
+                nodo->pai->cor = 0;
+                aux->cor = 0;
+                nodo->pai->pai->cor = 1;
+                nodo = nodo->pai->pai;
+            }
+            else{
+                if(nodo == nodo->pai->esq){ //segundo caso: pai vermelho, tio preto e nodo e filho a esquerda
+                    nodo = nodo->pai;
+                    rotacao_direita(nodo);
+                }
+                //terceiro caso: pai vermelho, tio preto e nodo e filho a direita
+                nodo->pai->cor = 0;
+                nodo->pai->pai->cor = 1;
+                rotacao_esquerda(nodo->pai->pai);
             }
         }
-        nodo = aux;
-        aux = aux->pai;
+        if(nodo->pai == NULL) //caso nao tem pai
+            return;
     }
 }
+int altura(TpNodo *nodo){ //determina a altura da arvore
+    if(nodo->chave != 0){
+        int altE = altura(nodo->esq);
+        int altD = altura(nodo->dir);
 
-void case1(TpArvore *arvore, TpNodo *nodo){
-	printf("case1");
-	TpNodo *avo = nodo->pai->pai;
-	avo->dir->cor = 1;
-	avo->esq->cor = 1;
-	avo->cor = 0;
-	if(avo->pai == NULL) 
-		avo->cor = 1;
+        if(altE < altD)
+            return altD + 1;
+        else
+            return altE + 1;
+    }
+    else
+        return 0;
 }
+void inserir(int val){ //adiciona novo nodo
+    TpNodo *aux = pRaiz, *pai = NULL, *new = (TpNodo*)malloc(sizeof(TpNodo)); //*aux - ponteiros de busca, *g_info - ponteiro para armazenar a informacao
 
-void case3(TpArvore *arvore, TpNodo *nodo, int p){
-	printf("case3");
-	TpNodo *pai = nodo->pai;
-	if(p==1){ //tio esq
-		if(pai->cor == 0)
-			pai->cor = 1;
-		else
-			pai->cor = 0;
-		nodo->cor = 1;
-		//nodo->alt++;
-		if(pai->pai == NULL){
-			nodo->pai = NULL;
-			arvore->raiz = nodo;
-		}else
-			nodo->pai=pai->pai;
-		pai->dir = nodo->esq;
-		nodo->esq = pai;
-		pai->pai = nodo;
-		if(pai->esq != NULL)  //pega a folha a esquerda e atualiza o fb e a altura
-			att_alt(pai->esq);
-		else if(pai->dir != NULL)  //pega a folha a direita e atualiza o fb e a altura
-			att_alt(pai->dir);
-		else{  //nodo fica folha
-			pai->alt = 0;
-			att_alt(pai);
-		}
-		//pai->alt=pai->alt - 1;
-	}
-	else if(p==0){ //tio dir
-		if(pai->cor == 0)
-			pai->cor = 1;
-		else
-			pai->cor = 0;
-		nodo->cor = 1;
-		//nodo->alt++;
-		if(pai->pai == NULL){
-			nodo->pai = NULL;
-			arvore->raiz = nodo;
-		}else
-			nodo->pai=pai->pai;
-		pai->esq = nodo->dir;
-		nodo->dir = pai;
-		pai->pai = nodo;
-		if(pai->dir != NULL) //pega a folha a direita e atualiza o Fb e a altura
-			att_alt(pai->dir);
-		else if(pai->esq != NULL)  //pega a folha a esquerda e atualiza o Fb e a altura
-			att_alt(pai->esq);
-		else{  //nodo fica folha
-			pai->alt = 0;
-			att_alt(pai);
-		}
-		//pai->alt=pai->alt - 1;
-	}
-}
+    while(aux != NULL && aux->chave != 0){   //procura o local onde colocar o novo no
+        pai = aux;                        //*g_pai guarda o pai do novo nodo
 
-void case2(TpArvore *arvore, TpNodo *nodo, int p){
-	printf("case2");
-	TpNodo *pai = nodo->pai, *avo = nodo->pai->pai;
-	if(p==1){ //tio esq
-		nodo->pai = avo;
-		avo->dir = nodo;
-		if(nodo->esq != NULL){
-			pai->esq = nodo->dir;
-			nodo->dir->pai = pai;
-		}else
-			pai->esq = NULL;
-		nodo->dir = pai;
-		pai->pai = nodo;
-		case3(arvore,nodo, 1);
-	}
-	else if(p==0){ //tio dir
-		nodo->pai = avo;
-		avo->esq = nodo;
-		if(nodo->esq != NULL){
-			pai->dir = nodo->esq;
-			nodo->esq->pai = pai;
-		}else
-			pai->dir = NULL;
-		nodo->esq = pai;
-		pai->pai = nodo;
-		case3(arvore,nodo, 0);
-	}
-}
-
-void balancear(TpArvore *arvore, TpNodo *nodo){
-	if(nodo->pai->cor == 0){ //pai red
-		if(nodo->pai->pai != NULL && nodo->pai->pai->esq != NULL && nodo->pai->pai->esq->cor == 0 && nodo->pai->pai->dir !=NULL && nodo->pai->pai->dir->cor == 0) //tio red e pai red
-			case1(arvore,nodo);
-		else if(nodo->pai->dir == nodo){ //x a direita
-			if(nodo->pai->pai->esq == nodo->pai){
-				if(nodo->pai->pai->dir == NULL || nodo->pai->pai->dir->cor == 1) //case 2 dir (tio dir)
-					case2(arvore, nodo, 0);
-			}
-			else if(nodo->pai->pai->dir == nodo->pai){ 
-				if(nodo->pai->pai->esq == NULL || nodo->pai->pai->esq->cor == 1){ //case 3 esq (tio esq)
-					nodo = nodo->pai;
-					case3(arvore, nodo, 1);
-				}
-			}
-		}
-		else if(nodo->pai->esq == nodo){ //x a esquerda
-			if(nodo->pai->pai->dir == nodo->pai){
-				if(nodo->pai->pai->esq == NULL || nodo->pai->pai->esq->cor == 1) //case 2 esq (tio esq)
-					case2(arvore, nodo, 1);
-			}
-			else if(nodo->pai->pai->esq == nodo->pai){
-				if(nodo->pai->pai->dir == NULL || nodo->pai->pai->dir->cor == 1){ //case 3 dir (tio dir)
-					nodo = nodo->pai;
-					case3(arvore, nodo, 0);
-				}
-			}
-		}
-	}
-}
-
-void inserir(TpArvore *arvore, int key){
-	TpNodo *aux = arvore->raiz, *pai, *new = (TpNodo*)malloc(sizeof(TpNodo));
-	while(aux != NULL){ //percorre aonde inserir
-		pai = aux;
-		if(key == aux->chave){
+        if(val == aux->chave){ //caso o valor seja repetido
 			printf("Esse valor ja esta inserido! Caso queira, tente novamente.\n");
 			return;
-		}else if(key < aux->chave){
-			aux = aux->esq;
-		}else
-		aux = aux->dir;
-	}
-	new->chave = key;
-	new->dir=NULL;
-	new->esq=NULL;
-	new->alt=0;
-	new->cor=0;
-
-	if(arvore->raiz == NULL){ //raiz nula
-		new->cor=1;
-		new->pai = NULL;
-		arvore->raiz = new;
-	}
-	else if(key < pai->chave){ //insere a esquerda
-		new->pai = pai;
-		pai->esq = new;
-		att_alt(new);
-	}
-	else{ //insere a direita
-		new->pai = pai;
-		pai->dir = new;
-		att_alt(new);
-	}
-	if(new->pai != NULL && new->pai->pai != NULL)
-		balancear(arvore, new);
+        }
+        else if(val < aux->chave)
+            aux = aux->esq;
+        else
+            aux = aux->dir;
+    }
+    new->chave = val;     //guarda o valor no nodo
+    new->cor = 1;        // adiciona a cor vermelha ao nodo
+    if(pRaiz == NULL){       //caso seja a raiz do arvore, o primeiro numero inserido
+        new->pai = NULL;
+        pRaiz = new;
+        insere_sentinela(new); //adiciona filhos sentinelas
+    }
+    else if(val < pai->chave){     //caso fique à esquerda do seu pai
+        free(pai->esq);        //limpa sentinela à esquerda
+        new->pai = pai;        //define o pai
+        pai->esq = new;     //define que o pai tem um filho à esquerda
+        insere_sentinela(new);   //adiciona filhos sentinalas
+        balancear(new);          //balancea a arvore
+    }
+    else{                           //caso fique à direita do seu pai
+        free(pai->dir);        //limpa sentinela à direita
+        new->pai = pai;        //define o pai
+        pai->dir = new;     //define que o pai tem um filho à direita
+        insere_sentinela(new);   //adicina filhos sentinelas
+        balancear(new);          //balancea a arvore
+    }
+    pRaiz->cor = 0; //raiz de cor preta
 	printf("O valor foi inserido com sucesso!\n\n");
 }
-
-void exibirNivel(TpNodo *nodo, int i, int nivel){
-	if(nodo != NULL){
-		i++;
-		exibirNivel(nodo->esq, i, nivel);
-		exibirNivel(nodo->dir, i, nivel);
-	}
-    if(nivel == i && nodo != NULL){ //caso o i seja igual ao nivel, ele printa nodo
-    	printf(" %d ", nodo->chave);
-        if(nodo->pai == NULL)  //printa raiz
-        	printf("(NIL)");
-        else
-        	printf("(%d) ", nodo->pai->chave);
-        if(nodo->cor == 1)
-        	printf(" BLACK, ");
-        else
-        	printf(" RED, ");
+void exibirNivel(TpNodo *nodo, int i, int nivel){ //nivel: nivel desejado para imprimir; i: procura o nivel
+    if(nodo->chave != 0){
+        i++;
+        exibirNivel(nodo->esq, i, nivel);
+        exibirNivel(nodo->dir, i, nivel);
     }
-    else if(i > nivel)
-    	return;
-}
+    if(i == nivel && nodo->chave != 0){ //caso o i seja igual ao nivel, ele imprime nodo
+        printf(" %d ", nodo->chave);
+        if(nodo->pai == NULL)  //imprime raiz
+            printf("(PRETO, NIL), ");
+        else{ //cor do nodo
+            if(nodo->cor)
+                printf("(VERMELHO, ");
+            else
+                printf("(PRETO, ");
 
-void exibir(TpArvore *arvore){
+            printf("%d),", nodo->pai->chave);
+        }
+    }
+    else if(i > nivel) //caso o "i" ja passou do nivel desejado
+        return;
+}
+void exibir(){
 	system("clear");
-	TpNodo *aux = arvore->raiz;
-	if(aux == NULL)
-		printf("A arvore esta vazia!");
-	else{
-		int x;
-		for(x = 0; x <= aux->alt; x++){
-			printf("\nNivel %d:", x);
-			exibirNivel(aux, -1, x);
-		}
-	}
-	printf("\n");
-}
+    if(pRaiz == NULL)
+        printf("A arvore esta vazia.");
 
+    else{
+        int x, alt = altura(pRaiz);
+
+        for(x = 0; x < alt; x++){ //envia qual nivel deve imprimir "x"
+            printf("\nNivel %d:", x);
+            exibirNivel(pRaiz, -1, x);
+        }
+    }
+    printf("\n");
+}
 int main(){
-	TpArvore *arvore = (TpArvore*)malloc(sizeof(TpArvore));
-	arvore = inicializa();
-	int n, key;
-	do{
+    int n, key;
+    Init();
+    do{
 		puts("\t\tMENU\n");
 		puts("(1) Para inserir um valor na arvore;");
 		puts("(2) Para exibir os valores na arvore;");
@@ -262,15 +220,15 @@ int main(){
 			printf("Digite o valor do no da arvore: ");
 			scanf("%d", &key);
 			if(key <= 0){
-				printf("\nSomente valores positivos sao permitidos!\n");
+				printf("\nSomente valores positivos sao permitidos!\n\n");
 				break;
 			}else{
 				puts("");
-				inserir(arvore, key);
+				inserir(key);
 				break;
 			}
 			case 2:
-			exibir(arvore);
+			exibir();
 			puts("");
 			break;
 			case 0:
@@ -282,6 +240,5 @@ int main(){
 			puts("Opcao invalida!");
 		}
 	}while(n!=0);
-	free(arvore);
-	return 0;
+	free(pRaiz);
 }
