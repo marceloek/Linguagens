@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include "backtracking.h"
 
-int prim(int a, int matriz[7][8], int vetor1[8], int mp[3][8], int l)
+int prim(int a, int matriz[8][8], int vetor1[8], int mp[3][8], int l)
 {
 	vetor1[a] = -1;
-	int k = 999, aa = a + 1, j = 0, kk;
+	int k = 999, j = 0, kk;
     for (int i = 0; i < 8; i++) //i= numero de colunas
     {
     	if (matriz[a][i] != 0 && vetor1[i] > -1)
@@ -60,6 +60,7 @@ int prim(int a, int matriz[7][8], int vetor1[8], int mp[3][8], int l)
 int main(void)
 {
 	int a = 0, vetor1[8] = {0, 1, 2, 3, 4, 5, 6, 7}, l = 0;
+	int asave = a;
     int m[8][8] = {{0, 2, 0, 6, 5, 0, 0, 0},   //0
                    {2, 0, 7, 7, 0, 0, 0, 0},   //1
                    {0, 7, 0, 0, 6, 2, 0, 0},   //2
@@ -76,5 +77,5 @@ int main(void)
         a = prim(a, m, vet, mp, l); ///atualizo valor de a e continuo a busca
         l++;
     }
-    backtracking(l-1, mp);
+    backtracking(asave, l-1, mp);
 }
