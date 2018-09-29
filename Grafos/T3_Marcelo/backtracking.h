@@ -1,5 +1,5 @@
-void backtracking(int beck, int mp[4][beck+1]){
-	int soma = 0, i=1;
+void backtracking(int a, int beck, int mp[4][beck+1]){
+	int soma = 0, i= a + 1;
 	printf("\nArvore geradora minima: ");
 	while(i!=8){
 		printf("(%d,%d) -> ", mp[0][i], mp[2][i]);
