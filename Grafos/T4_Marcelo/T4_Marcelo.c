@@ -47,21 +47,21 @@ void welshpowell(int m[11][11], int vet[3][11])
     {
         for (j = 0; j < 11; j++) //coluna da matriz (procura os vertices conectados)
         {
-            if (m[i][j] == 1) //encontra vertice conectado
+            if (m[i][j] == 1) //encontra o vertice conectado
             {
-                count1++; //aumenta contador de grau
+                count1++;           //aumenta contador de grau pela coneccao
                 vet[1][i] = count1; //aplica grau
             }
             if (count1 > count2) //encontra maior grau do vetor
                 count2 = count1; //salva maior grau
         }
-        count1 = 0; //reseta contador
+        count1 = 0; //reseta contador apos mudar de vertice
     }
-    sort(vet);           //aplica a ordenacao do grau
-    count2 = 0;          //reseta contador
-    while (count2 != 11) //verifica se coloriu todos os vértices
+    sort(vet);           //aplica a ordenacao do grau dos vertices
+    count2 = 0;          //reseta contador para utiliza-lo depois
+    while (count2 != 11) //verifica se coloriu todos os vertices
     {
-        for (k = 0; k < 11; k++) //laco para pintar ou nao os vértices
+        for (k = 0; k < 11; k++) //laco para pintar ou nao os vertices
         {
             if (vet[2][k] == 0) //verifica se o vertice ja foi pintado
             {
@@ -80,13 +80,13 @@ void welshpowell(int m[11][11], int vet[3][11])
                                     if (vet[2][p] != vet[2][k] || vet[2][p] == 0) //verifica se ambos nao tem a mesma cor ou se o vertice conectado esta sem cor
                                         count1 = 1;                               //variavel para atribuir a cor depois
                                     else
-                                        count1 = 0; //variavel para reseta a cor depois
+                                        count1 = 0; //variavel para resetar a cor depois
                                 }
                                 else            //caso a cor do vertice nao for diferente da cor a ser aplicada
-                                    count1 = 0; //a cor do vertice eh resetada
+                                    count1 = 0; //variavel para resetar a cor depois
                             }
                         }
-                        if (count1 == 0) //caso encontre ao menos um vertice irregular, o laco é interrompido, ja que nao eh necessario e para nao mudar o count1
+                        if (count1 == 0) //caso encontre ao menos um vertice irregular, o laco é interrompido, ja que nao eh mais necessario continuar e para nao mudar o count1
                             break;
                     }
                 }
@@ -121,5 +121,5 @@ int main(void)
     int vet[3][11] = {{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, //vertice
                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},   //grau
                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};  //cor
-    welshpowell(m, vet); //aplico o algoritmo
+    welshpowell(m, vet);                                   //aplico o algoritmo
 }
