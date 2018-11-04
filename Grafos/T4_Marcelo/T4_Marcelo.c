@@ -48,19 +48,17 @@ void welshpowell(int m[11][11], int vet[3][11])
     {
         for (j = 0; j < 11; j++)
         {
-            if (m[i][j] == 1)
+            if (m[i][j] == 1) //aplica grau
             {
                 count++;
                 vet[1][i] = count;
             }
-            if (count > count2)
+            if (count > count2) //encontra maior grau do vetor
                 count2 = count;
         }
-        count = 0;
+        count = 0; //reseta contador
     }
     sort(vet);
-    display(vet);
-    count = 0;
     count2 = 0;
     while (count2 != 11) //verifica se coloriu todos os vértices
     {
@@ -71,49 +69,41 @@ void welshpowell(int m[11][11], int vet[3][11])
                 for (j = 0; j < 11; j++) //laco para achar os vertices conectados
                 {
                     aux = vet[0][k] - 1; //posicao do vertice a ser colorido na matriz
-                    if (m[aux][j] == 1)  //verifica coneccao com vertice
+                    if (m[aux][j] == 1)  //verifica a coneccao com o vertice
                     {
                         aux2 = j + 1;
-                        for (p = 0; p < 11; p++) //laco para encontrar o vertice conectado no vetor
+                        for (p = 0; p < 11; p++) //laco para encontrar no vetor o vertice conectado
                         {
                             if (vet[0][p] == aux2) //caso encontre o vertice
                             {
-                                if (vet[2][p] != cor)
+                                if (vet[2][p] != cor) //caso a cor do vertice for diferente da cor a ser aplicada
                                 {
-                                    if (vet[2][p] != vet[2][k] || vet[2][p] == 0) //verifica se ambos tem a mesma cor
-                                    {
-                                        vet[2][k] = cor;
-                                        count = 1;
-                                    }
+                                    if (vet[2][p] != vet[2][k] || vet[2][p] == 0) //verifica se ambos nao tem a mesma cor ou se o vertice conectado esta sem cor
+                                        count = 1;                                //variavel para atribuir a cor depois
                                     else
-                                    {
-                                        vet[2][k] = 0;
-                                        count = 0;
-                                    }
+                                        count = 0; //variavel para reseta a cor depois
                                 }
-                                else
+                                else //caso a cor do vertice nao for diferente da cor a ser aplicada, a cor do vertice eh resetada
                                     count = 0;
                             }
                         }
-                        if (count == 0)
+                        if (count == 0) //caso encontre ao menos um vertice irregular
                             break;
                     }
                 }
-                if (count == 1) //caso o vertice foi pintado
+                if (count == 1) //caso o vertice sera pintado
                 {
-                    vet[2][k] = cor;
-                    count2++;
+                    vet[2][k] = cor; //aplica cor
+                    count2++;        //aumenta o contador dos vertices pintados
                 }
-                else if (count == 0)
-                {
-                    vet[2][k] = 0;
-                }
+                else if (count == 0) //caso o vertice nao sera pintado
+                    vet[2][k] = 0;   //reseta cor
             }
-            count = 0;
+            count = 0; //reseta contador da cor
         }
-        cor++;
+        cor++; //aumenta a cor a ser aplicada
     }
-    display(vet);
+    display(vet); //printa vetor
 }
 
 int main(void)
@@ -134,9 +124,3 @@ int main(void)
                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};  //cor
     welshpowell(m, vet);
 }
-/*
- 
-    int vet[3][11] = {{08, 11, 04, 07, 09, 10, 01, 02, 05, 06, 03}, //vertice
-                      {05, 05, 04, 03, 03, 03, 02, 02, 02, 02, 01},   //grau
-                      {01, 02, 01, 03, 02, 03, 02, 03, 01, 02, 02}};  //cor
- */
