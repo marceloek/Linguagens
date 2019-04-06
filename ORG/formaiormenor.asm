@@ -5,8 +5,8 @@ vector_A:	.word	  31, 5, -2, 5, -15, 11, 30, 7, 0, -6
 main:
 	la $a0, vector_A   			# a0 armazena vetor[10]
     addi $a1, $zero, 10			# a1 armazena tamanho do vetor
-    addi	$s0, $zero, -999	# a = -99
-    addi	$s1, $zero, 999		# b = 99
+    addi	$s0, $zero, -999	# a = -999
+    addi	$s1, $zero, 999		# b = 999
     add	$s2, $zero, $zero		# z = 0
 
 teste: slt $t0, $s2, $a1	# testa condiçao de final de for
