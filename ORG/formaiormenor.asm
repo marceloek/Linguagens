@@ -5,19 +5,9 @@ vector_A:	.word	  31, 5, -2, 5, -10, 11, 30, 7, 0, -6
 main:
 	la $a0, vector_A   		# a0 armazena vetor[10]
     addi $a1, $zero, 10
-    addi	$s0, $zero, -99			# a = 99
-    addi	$s1, $zero, 99			# b = -99
+    addi	$s0, $zero, -99			# a = -99
+    addi	$s1, $zero, 99			# b = 99
     add	$s2, $zero, $zero			# z = 0
-#int a = 99;
-#int b = -99;
-#int x;
-#int vetor[10];
-#for(x=0;x<10;x++){
-    #if(a > vetor[x])
-   #     a = vetor[x];
-  #  if(b < vetor[x])
- #       b = vetor[x];
-#}
 
 teste: slti $t0, $s2, 10		# testa condiçao de final de laço
 	beq  $t0, $zero, fim
@@ -37,5 +27,4 @@ menor:
 	
 	j    teste			# desvia para o teste
 	
-fim: 
-    
+fim:
