@@ -9,8 +9,8 @@ main:
 
     div $a0, $s0, $s2       # x0 = a / c
     mul $a1, $s1, $s3       # x1 = b * d
-    add $a2, $a0, $a1       # x = x0 + x1
-    subi $a2, $a2, 50       # x = x - 50
+    add $a1, $a0, $a1       # x1 = x0 + x1
+    subi $a1, $a1, 50       # x1 = x1 - 50
     mul $s2, $a0, 10        # c = x * 10
 
     slti $t0, $s2, 101	    # c > 100
