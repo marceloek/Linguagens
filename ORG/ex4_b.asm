@@ -11,7 +11,7 @@ main:
     mul $a1, $s1, $s3       # x1 = b * d
     add $a2, $a0, $a1       # x = x0 + x1
     subi $a2, $a2, 50       # x = x - 50
-    mul $s2, $s2, 10
+    mul $s2, $a0, 10        # c = x * 10
 
     slti $t0, $s2, 101	    # c > 100
     bne $t0, $zero, if1
