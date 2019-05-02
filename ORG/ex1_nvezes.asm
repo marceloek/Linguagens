@@ -1,4 +1,4 @@
-            .data
+    .data
 vector_A:	.word   31, 5, -2, 5, -15, 11, 30, 7, 0, -6
 vector_B:   .space	40
 
