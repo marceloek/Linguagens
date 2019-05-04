@@ -9,8 +9,8 @@ matriz_A:
 
 	.text
     la $s1, matriz_A
-    addi $a0, $zero, 0  # x (colunas)
-    addi $a1, $zero, 3  # y (linhas)
+    addi $a0, $zero, 2  # x (colunas)
+    addi $a1, $zero, 1  # y (linhas)
     addi $a2, $zero, 4  # dimx (colunas da matriz)
     addi $a3, $zero, 6  # dimy (linhas da matriz)
     addi $s0, $zero, 0  # i (contador de 9)
@@ -201,7 +201,7 @@ if02:
     addi $s0, $s0, 1    # i++
    
 if31:
-    addi $s2, $s4, 8    # indice_vetor -= 4 (M[x+1][y]) 
+    addi $s2, $s4, 4    # indice_vetor -= 4 (M[x+1][y]) 
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
