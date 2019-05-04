@@ -17,13 +17,21 @@ int main{
 		if(y == 0){
 			if(M[x][y+1] == 9)
 				i++;
+			if(M[x+1][y+1] == 9)
+				i++;
 		}else if(y == b-1){
 			if(M[x][y-1] == 9)
 				i++;
+			if(M[x+1][y-1] == 9)
+				i++;
 		}else{
-			if(M[x][y-1] == 9)
+			if(M[x+1][y-1] == 9)
+				i++;
+			if(M[x+1][y+1] == 9)
 				i++;
 			if(M[x][y+1] == 9)
+				i++;
+			if(M[x][y-1] == 9)
 				i++;
 		}
 	}else if(x == a-1){
@@ -32,13 +40,21 @@ int main{
 		if(y == 0){
 			if(M[x][y+1] == 9)
 				i++;
+			if(M[x-1][y+1] == 9)
+				i++;
 		}else if(y == b-1){
 			if(M[x][y-1] == 9)
+				i++;
+			if(M[x-1][y-1] == 9)
 				i++;
 		}else{
 			if(M[x][y-1] == 9)
 				i++;
 			if(M[x][y+1] == 9)
+				i++;
+			if(M[x-1][y-1] == 9)
+				i++;
+			if(M[x-1][y+1] == 9)
 				i++;
 		}
 	}else{
@@ -49,13 +65,29 @@ int main{
 		if(y == 0){
 			if(M[x][y+1] == 9)
 				i++;
+			if(M[x-1][y+1] == 9)
+				i++;
+			if(M[x+1][y+1] == 9)
+				i++;
 		}else if(y == b-1){
+			if(M[x-1][y-1] == 9)
+				i++;
+			if(M[x+1][y-1] == 9)
+				i++;
 			if(M[x][y-1] == 9)
 				i++;
 		}else{
 			if(M[x][y-1] == 9)
 				i++;
 			if(M[x][y+1] == 9)
+				i++;
+			if(M[x-1][y-1] == 9)
+				i++;
+			if(M[x-1][y+1] == 9)
+				i++;
+			if(M[x+1][y-1] == 9)
+				i++;
+			if(M[x+1][y+1] == 9)
 				i++;
 		}
 	}
