@@ -1,15 +1,16 @@
     .data
-matriz_A:	.word   1,9,2,9 
-            	.word   9,4,4,6
-            	.word   3,0,9,9
-            	.word   2,9,5,8
-            	.word   2,9,9,2
-		.word   1,1,1,1
+matriz_A:	
+        .word   9,3,9,9 
+        .word   9,9,9,1
+        .word   9,9,9,9
+        .word   9,1,5,9
+        .word   9,9,1,9
+        .word   9,3,9,9
 
 	.text
     la $s1, matriz_A
     addi $a0, $zero, 0  # x (colunas)
-    addi $a1, $zero, 5  # y (linhas)
+    addi $a1, $zero, 3  # y (linhas)
     addi $a2, $zero, 4  # dimx (colunas da matriz)
     addi $a3, $zero, 6  # dimy (linhas da matriz)
     addi $s0, $zero, 0  # i (contador de 9)
@@ -25,17 +26,26 @@ main:
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if20    # M[x+1][y] == 9
+    bne $s2, 9, if05    # M[x+1][y] == 9
     addi $s0, $s0, 1    # i++
 
-if20:
+if05:
     bne $a1, 0, if10    # y == 0
 
     add $s2, $s4, $s3   # indice_vetor += y + 1 (M[x][y+1])
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
     
-    bne $s2, 9, if10    # M[x][y+1] == 9
+    bne $s2, 9, if40    # M[x][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if40:
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, final   # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
@@ -47,11 +57,38 @@ if10:
     add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if11    # M[x][y-1] == 9
+    bne $s2, 9, if41    # M[x][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if41:
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+
+    bne $s2, 9, final   # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
  if11:
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+
+    bne $s2, 9, if42    # M[x+1][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if42:
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if43    # M[x+1][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if43:
     add $s2, $s4, $s3   # indice_vetor += y + 1 (M[x][y+1])
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
@@ -64,7 +101,7 @@ if12:
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if01     # M[x][y-1] == 9
+    bne $s2, 9, final   # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
@@ -86,28 +123,64 @@ if21:
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
     
-    bne $s2, 9, if22     # M[x][y+1] == 9
+    bne $s2, 9, if44    # M[x][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if44:
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, final   # M[x-1][y+1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
 if22:
     subi $s5, $a3, 1    # y = b-1
-    bne $s5, $a1, if23     # y == b-1
+    bne $s5, $a1, if46  # y == b-1
 
     sub $s2, $s4, $s3   # indice_vetor -= 4*dimx (M[x][y-1])
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if23     # M[x][y-1] == 9
+    bne $s2, 9, if45    # M[x][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if45:
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+
+    bne $s2, 9, final   # M[x-1][y-1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
- if23:
+if46:
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if47    # M[x-1][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if47:
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if23    # M[x-1][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if23:
     add $s2, $s4, $s3   # indice_vetor += y + 1 (M[x][y+1])
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
     
-    bne $s2, 9, if24     # M[x][y+1] == 9
+    bne $s2, 9, if24    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
 if24:
@@ -115,7 +188,7 @@ if24:
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if02     # M[x][y-1] == 9
+    bne $s2, 9, final   # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
@@ -132,18 +205,35 @@ if31:
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if32    # M[x-1][y] == 9
+    bne $s2, 9, if32    # M[x+1][y] == 9
     addi $s0, $s0, 1    # i++
     
 if32:
     bne $a1, 0, if33    # y == 0
 
-    mul $s3, $a2, 4     # 4 * dimx
     add $s2, $s4, $s3   # indice_vetor += y + 1 (M[x][y+1])
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
     
-    bne $s2, 9, if33     # M[x][y+1] == 9
+    bne $s2, 9, if48    # M[x][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if48:
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if49    # M[x-1][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if49:
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, final    # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
@@ -151,29 +241,82 @@ if33:
     subi $s5, $a3, 1    # y = b-1
     bne $s5, $a1, if34    # y == b-1
 
-    mul $s3, $a2, 4     # 4 * dimx
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+
+    bne $s2, 9, if51    # M[x-1][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if51:
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+
+    bne $s2, 9, if52    # M[x+1][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if52:
     sub $s2, $s4, $s3   # indice_vetor -= 4*dimx (M[x][y-1])
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if34    # M[x][y-1] == 9
+    bne $s2, 9, final    # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
 if34:
-    add $s2, $s4, $s3   # indice_vetor += y + 1 (M[x][y+1])
+    sub $s2, $s4, $s3   # indice_vetor -= 4*dimx (y-1)
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
     
-    bne $s2, 9, if35    # M[x][y+1] == 9
+    bne $s2, 9, if53    # M[x][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if53:
+    add $s2, $s4, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if54    # M[x][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if54:
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if55    # M[x-1][y-1] == 9
+    addi $s0, $s0, 1    # i++
+
+if55:
+    subi $s2, $s4, 4    # indice_vetor -= 4 (x-1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if56    # M[x-1][y+1] == 9
+    addi $s0, $s0, 1    # i++
+
+if56:
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    sub $s2, $s2, $s3   # indice_vetor -= 4*dimx (y-1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
+    lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
+    
+    bne $s2, 9, if35    # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
 if35:
-    sub $s2, $s4, $s3   # indice_vetor -= 4*dimx (M[x][y-1])
-    add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
+    addi $s2, $s4, 4    # indice_vetor += 4 (x+1)
+    add $s2, $s2, $s3   # indice_vetor += 4*dimx (y+1)
+    add $s2, $s1, $s2   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, final   # M[x][y-1] == 9
+    bne $s2, 9, final   # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
 final:
