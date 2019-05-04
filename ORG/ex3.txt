@@ -1,0 +1,17 @@
+3)
+
+a) como cada uma das pseudo-instruções 'la' é implementada? 
+Em ambas as instruções ocorre a utilização das instruções lui e ori para carregar a 
+constante de 32 bit em um registrador, na qual lui carrega a parte alta do registrador
+representada por 1001 em hexadecimal ou 4097 em decimal, enquanto ori carrega a parte 
+mais baixa. Entrentanto, a instrução ori para o vector_A é representada por 0, já para 
+o vector_B é representada por 40, para adição do respectivo espaço utlizado pelo vector_A.
+
+b) Qual o endereço de memória do rótulo laco?
+O endereço dado pelo PC do rótulo é 0x00104014.
+
+c) Qual o valor armazenado no campo offset da instrução beq?
+É armazenado o endereço da memória de programa aonde está localizado o rótulo 'final',
+ou seja, o endereço 0x00104040.
+
+d) Apresente o código de máquina do programa:
