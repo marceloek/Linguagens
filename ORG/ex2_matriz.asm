@@ -115,7 +115,7 @@ if24:
     add $s2, $s2, $s1   # calcula posicao matriz_A[x][y]
     lw  $s2, 0($s2)     # le posicao matriz_A[x][y]
 
-    bne $s2, 9, if01     # M[x][y-1] == 9
+    bne $s2, 9, if02     # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
     j final
 
