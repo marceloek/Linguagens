@@ -12,15 +12,9 @@ void mostra_campo(int user[9][9], int b)
     }
 }
 
-void calcula_bomba(int campo[9][9], int user[9][9], int b)
+void calcula_bomba(int campo[9][9], int user[9][9], int x, int y, int b)
 {
-    int i = 0, x, y;
-    puts("\nDigite as coordenadas do campo minado (coluna)(linha): ");
-    scanf("%d", &y);
-    scanf("%d", &x);
-    puts("");
-    x--;
-    y--;
+    int i = 0;
     if (x == 0)
     {
         if (campo[x + 1][y] == 9)
@@ -147,7 +141,7 @@ int main()
         {0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-    int b;
+    int x, y, b;
     puts("Digite a dificuldade do campo minado, exemplo: 5 = 5x5, 7 = 7x7 ou 9 = 9x9:");
     scanf("%d", &b);
     if (b == 5 || b == 7 || b == 9)
@@ -158,10 +152,16 @@ int main()
     for (int i = 0; i < 81; i++)
     {
         mostra_campo(user, b);
+        puts("\nDigite as coordenadas do campo minado (coluna)(linha): ");
+        scanf("%d", &y);
+        scanf("%d", &x);
+        puts("");
+        x--;
+        y--;
         if (campo[x][y] == 9)
         {
             printf("\nA BOMBA EXPLODIU! VOCE PERDEU!\n");
-            calcula_bomba(campo, user, b);
+            calcula_bomba(campo, user, x, y, b);
             mostra_campo(user, b);
             puts("\nLOCALIZACAO DAS BOMBAS:\n");
             for (int i = 0; i < b; i++)
@@ -176,7 +176,7 @@ int main()
         }
         else
         {
-            calcula_bomba(campo, user, b);
+            calcula_bomba(campo, user, x, y, b);
         }
     }
 }

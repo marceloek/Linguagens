@@ -47,8 +47,9 @@ main:
 
     continua_main2:
 
-	li  $v0, 5
+	li  $v0, 5          # seta valor da operacao
 	la  $s7, coordena   # imprime mensagem para inserir posicao
+    syscall             # imprime string
 
     addi $t0, $zero, 0  # x (colunas)
     addi $t1, $zero, 0  # y (linhas)
@@ -59,10 +60,9 @@ main:
 
     bne $s1, 9, calcula_bombas
     addi $s6, $zero, 1  # seto fim de jogo
-	li  $v0, 5
-	la  $s7, fim_jogo   # salva mensagem de fim de jogo
+    li  $v0, 5          # seta valor da operacao
+    la  $s7, fim_jogo   # salva mensagem de fim de jogo
     syscall             # imprime string
-
 
 calcula_bombas:
 
@@ -378,13 +378,15 @@ calcula_bombas:
     j mostra_campo
 
 mostra_campo:
-    # comeca a printar a matriz
+    # comeca a printar a matriz user
 
-    beq $s6, 1, explodiu
-    j continua_main2
+    beq $s6, 1, f_jogo  # termino o jogo e printo a matriz campo
+    j continua_main2    # continuo a main
 
-    explodiu:
+    f_jogo:
     
-	li  $v0, 5
+	li  $v0, 5          # seta valor da operacao
 	la  $s7, localiza   # salva mensagem de localizacao
     syscall             # imprime string
+
+    # comeca a printar a matriz campo
