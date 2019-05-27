@@ -20,7 +20,7 @@ campo:                  # matriz campo inicializada com zeros
         .word   0,0,9,0,9,0,0,9,0
         .word   9,0,0,0,0,0,0,0,9
 
-coordena:		.asciiz		"\n\nDigite as coordenadas do campo minado (coluna - linha):\n"
+coordena:		.asciiz		"\nDigite as coordenadas do campo minado (coluna - linha):\n"
 dimensao:		.asciiz		"\nDigite a dificuldade do campo minado, exemplo: 5 = 5x5, 7 = 7x7 ou 9 = 9x9: "
 fim_jogo:		.asciiz		"\nA BOMBA EXPLODIU! VOCE PERDEU!\n"
 localiza:		.asciiz		"\nLOCALIZACAO DAS BOMBAS:\n"
@@ -40,8 +40,10 @@ main:
     syscall             # imprime string
 
 	li	$v0, 5			
-	syscall				# le  num_linhas
+	syscall				# le num_linhas
     add $a1, $zero, $v0 # b = num_linhas
+
+    subi $s3, $a1, 1    # num_linhas - 1
 
     j insere_bombas     # chama funcao para inserir as bombas na matriz campo
 
@@ -83,7 +85,6 @@ calcula_bombas:
 
     addi $s1, $s4, 4    # posicao_matriz += 4 (M[x+1][y]) 
     lw  $s1, campo($s1) # le posicao campo
-
     bne $s1, 9, if05    # M[x+1][y] == 9
     addi $s0, $s0, 1    # i++
 
@@ -92,26 +93,22 @@ calcula_bombas:
 
     addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
-    
     bne $s1, 9, if40    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if40:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
     addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
-    lw  $s1, campo($s1) # le posicao campo
-    
+    lw  $s1, campo($s1) # le posicao campo 
     bne $s1, 9, resume  # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
     j resume
 
     if10:
-    subi $s5, $a1, 2    # num_linhas - 2
-    bne $s5, $t1, if11  # y == b
+    bne $s3, $t1, if11  # y == b
 
     subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
-
     bne $s1, 9, if41    # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
 
@@ -119,7 +116,6 @@ calcula_bombas:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
     subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
-
     bne $s1, 9, resume  # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
     j resume
@@ -128,7 +124,6 @@ calcula_bombas:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
     subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
-
     bne $s1, 9, if42    # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
@@ -136,31 +131,27 @@ calcula_bombas:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
     addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
-    
     bne $s1, 9, if43    # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if43:
     addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
-    
     bne $s1, 9, if12    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if12:
     subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
-
     bne $s1, 9, resume  # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
     j resume
 
     if01:
-    bne $s5, $t0, if02  # x = num_linhas
+    bne $s3, $t0, if02  # x = b
 
     subi $s1, $s4, 4    # posicao_matriz -= 4 (M[x-1][y]) 
     lw  $s1, campo($s1) # le posicao campo
-
     bne $s1, 9, if21    # M[x-1][y] == 9
     addi $s0, $s0, 1    # i++
 
@@ -181,7 +172,7 @@ calcula_bombas:
     j resume
 
     if22:
-    bne $s5, $t1, if46  # y == b
+    bne $s3, $t1, if46  # y == b
 
     subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
@@ -259,7 +250,7 @@ calcula_bombas:
     j resume
 
     if33:
-    bne $s5, $t1, if34  # y == b
+    bne $s3, $t1, if34  # y == b
 
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
     subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
@@ -334,48 +325,44 @@ mostra_campo:
 	la  $a0, campomin   # imprime mensagem para mostrar campo minado
     syscall             # imprime string
 
-    addi $t2, $zero, 0  # zerando variavel do for
-    addi $t7, $zero, 0  # zerando variavel de adicao de linha
-    mul $t6, $t7, 36    # calculando linha
+    addi $t2, $zero, 0  # zerando variavel do for linha
+    addi $t4, $zero, 0  # zerando variavel de adicao de linha
+
     for:
-    addi $t3, $zero, 0  # zerando variavel do for
     beq $t2, $a1, exit  # verifica fim do for
+    addi $t3, $zero, 0  # zerando variavel do for coluna
 
     for2:
     beq $t3, $a1, exit2 # verifica fim do for2
 
-    mul $t4, $t3, 4     # calcula posicao multiplicando por 4
-    add $s1, $t6, $t4   # adiciona linha com coluna
+    mul $t5, $t3, 4     # calcula posicao de coluna
+    add $s1, $t5, $t4   # adiciona linha com coluna
     lw  $s1, user($s1)  # salva posicao da matriz
 
     # printo um espaco
     li $v0, 4
     la $a0, noespaco
     syscall
-
     # printo as posicoes
     li $v0, 1
     move $a0, $s1
     syscall
 
-    addi $t3, $t3, 1    # aumento posicao da matriz
+    addi $t3, $t3, 1    # aumento contador de coluna
     j for2              # volta pro for
     exit2:
-    addi $t7, $t7, 1    # adiciona mais 1 por causa da linha
-    mul $t6, $t7, 36    # adiciona mais uma linha nas posicoes
-
     # printo nova linha
     li $v0, 4
     la $a0, novalinh
     syscall
 
-    addi $t2, $t2, 4    # aumento posicao da matriz
+    addi $t2, $t2, 1    # aumento contador de linha
+    mul $t4, $t2, 36    # calcula posicao de adicao da linha
     j for               # volta pro for
     exit:
-
+    
     beq $s2, 1, f_jogo  # termino o jogo e printo a matriz campo
     j continua_main2    # continuo a main
-
 
     f_jogo:
     # comeca a printar a matriz campo
@@ -383,43 +370,42 @@ mostra_campo:
 	la  $a0, localiza   # salva mensagem de localizacao
     syscall             # imprime string
 
-    addi $t2, $zero, 1  # zerando variavel do for
-    addi $t7, $zero, 1  # zerando variavel de adicao de linha
-    mul $t6, , $t7, 36  # calculando linha
+    addi $t2, $zero, 0  # zerando variavel do for linha
+    addi $t4, $zero, 0  # zerando variavel de adicao de linha
 
     for3:
-    addi $t3, $zero, 1  # zerando variavel do for
     beq $t2, $a1, exit3 # verifica fim do for
+    addi $t3, $zero, 0  # zerando variavel do for coluna
 
     for4:
     beq $t3, $a1, exit4 # verifica fim do for2
 
-    mul $t4, $t3, 4     # calcula posicao multiplicando por 4
-    add $s1, $t6, $t4   # adiciona linha com coluna
+    mul $t5, $t3, 4     # calcula posicao de coluna
+    add $s1, $t5, $t4   # adiciona linha com coluna
     lw  $s1, campo($s1) # salva posicao da matriz
+
     # printo um espaco
     li $v0, 4
     la $a0, noespaco
     syscall
-
     # printo as posicoes
     li $v0, 1
     move $a0, $s1
     syscall
-    addi $t3, $t3, 4    # aumento posicao da matriz
-    j for4              # volta pro for
 
+    addi $t3, $t3, 1    # aumento contador de coluna
+    j for4              # volta pro for
     exit4:
-    addi $t7, $t7, 1    # adiciona mais 1 por causa da linha
-    mul $t6, $t7, 36    # adiciona mais uma linha nas posicoes
     # printo nova linha
     li $v0, 4
     la $a0, novalinh
     syscall
-    addi $t2, $t2, 4    # aumento posicao da matriz
-    j for3              # volta pro for
 
+    addi $t2, $t2, 1    # aumento contador de linha
+    mul $t4, $t2, 36    # calcula posicao de adicao da linha
+    j for3              # volta pro for
     exit3:
+
     j final             # termino o programa
 
 insere_bombas:
