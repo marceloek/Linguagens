@@ -24,9 +24,9 @@ coordena:		.asciiz		"\nDigite as coordenadas do campo minado (coluna - linha):\n
 dimensao:		.asciiz		"\nDigite a dificuldade do campo minado, exemplo: 5 = 5x5, 7 = 7x7 ou 9 = 9x9: "
 fim_jogo:		.asciiz		"\nA BOMBA EXPLODIU! VOCE PERDEU!\n"
 localiza:		.asciiz		"\nLOCALIZACAO DAS BOMBAS:\n"
-campomin:       .asciiz		"\nVEJA A SITUACAO DO CAMPO MINADO:\n"
-novalinh:       .asciiz		"\n"
-noespaco:       .asciiz		" "
+campomin:		.asciiz		"\nVEJA A SITUACAO DO CAMPO MINADO:\n"
+novalinh:		.asciiz		"\n"
+noespaco:		.asciiz		" "
 
 	.text
 main:
@@ -35,12 +35,12 @@ main:
     la $a0, user        # salva matriz user
     la $a0, campo       # salva matriz campo
 
-	li  $v0, 4          # seta valor da operacao
-	la  $a0, dimensao   # imprime mensagem para escolher dificuldade
+    li  $v0, 4          # seta valor da operacao
+    la  $a0, dimensao   # imprime mensagem para escolher dificuldade
     syscall             # imprime string
 
-	li	$v0, 5			
-	syscall				# le num_linhas
+    li	$v0, 5			
+    syscall		# le num_linhas
     add $a1, $zero, $v0 # b = num_linhas
 
     subi $s3, $a1, 1    # num_linhas - 1
@@ -52,17 +52,17 @@ main:
     j mostra_campo
 
     continua_main2:
-	li  $v0, 4          # seta valor da operacao de print
-	la  $a0, coordena   # imprime mensagem para inserir posicao
+    li  $v0, 4          # seta valor da operacao de print
+    la  $a0, coordena   # imprime mensagem para inserir posicao
     syscall             # imprime string
 
-	li	$v0, 5			
-	syscall				# le x
+    li	$v0, 5			
+    syscall				# le x
     add $t0, $zero, $v0 # x (colunas)
     subi $t0, $t0, 1    # x-- (colunas)
 
-	li	$v0, 5			
-	syscall				# le y
+    li	$v0, 5			
+    syscall		# le y
     add $t1, $zero, $v0 # y (linhas)
     subi $t1, $t1, 1    # y-- (linhas)
 
@@ -321,8 +321,8 @@ calcula_bombas:
 
 mostra_campo:
     # comeca a printar a matriz user
-	li  $v0, 4          # seta valor da operacao
-	la  $a0, campomin   # imprime mensagem para mostrar campo minado
+    li  $v0, 4          # seta valor da operacao
+    la  $a0, campomin   # imprime mensagem para mostrar campo minado
     syscall             # imprime string
 
     addi $t2, $zero, 0  # zerando variavel do for linha
@@ -366,8 +366,8 @@ mostra_campo:
 
     f_jogo:
     # comeca a printar a matriz campo
-	li  $v0, 4          # seta valor da operacao
-	la  $a0, localiza   # salva mensagem de localizacao
+    li  $v0, 4          # seta valor da operacao
+    la  $a0, localiza   # salva mensagem de localizacao
     syscall             # imprime string
 
     addi $t2, $zero, 0  # zerando variavel do for linha
