@@ -61,22 +61,18 @@ main:
 	li	$v0, 5			
 	syscall				# le x
     add $t0, $zero, $v0 # x (colunas)
+    subi $t0, $t0, 1    # x-- (colunas)
 
 	li	$v0, 5			
 	syscall				# le y
     add $t1, $zero, $v0 # y (linhas)
-
-    subi $t0, $t0, 1    # x-- (colunas)
     subi $t1, $t1, 1    # y-- (linhas)
 
     # variaveis para controle de posicao da matriz:
-    addi $s7, $zero, 9  # adicao de linha da matriz
-    mul $s7, $s7, 4     # adicao de linha da matriz
     mul $s4, $t1, 9     # posicao_matriz = y * num_linhas
     add $s4, $s4, $t0   # posicao_matriz += x
-    mul $s4, $s4, 4     # posicao_matriz *= 4 (para calculo da posicao 
-    mul $s3, $a1, 4     # 4 * num_linhas (para localizacao da posicao da linha anterior ou posterior ((y+1) ou (y-1)) )
-    
+    mul $s4, $s4, 4     # posicao_matriz *= 4 (para calculo da posicao
+
     lw  $s1, campo($s4) # le posicao campo
 
     bne $s1, 9, calcula_bombas
@@ -87,6 +83,7 @@ main:
 
 calcula_bombas:
 
+    la $a0, campo       # salva matriz campo
     addi $s0, $zero, 0  # i (contador de bombas)
 
     bne $t0, 0, if01    # x == 0
@@ -100,7 +97,7 @@ calcula_bombas:
     if05:
     bne $t1, 0, if10    # y == 0
 
-    add $s1, $s4, $s3   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if40    # M[x][y+1] == 9
@@ -108,7 +105,7 @@ calcula_bombas:
 
     if40:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, resume  # M[x+1][y+1] == 9
@@ -116,10 +113,10 @@ calcula_bombas:
     j resume
 
     if10:
-    subi $s6, $a1, 1
-    bne $s6, $t1, if11  # y == b
+    subi $s5, $a1, 2    # num_linhas - 2
+    bne $s5, $t1, if11  # y == b
 
-    sub $s1, $s4, $s3   # posicao_matriz -= 4*num_linhas (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, if41    # M[x][y-1] == 9
@@ -127,7 +124,7 @@ calcula_bombas:
 
     if41:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, resume  # M[x+1][y-1] == 9
@@ -136,7 +133,7 @@ calcula_bombas:
 
     if11:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, if42    # M[x+1][y-1] == 9
@@ -144,21 +141,21 @@ calcula_bombas:
 
     if42:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if43    # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if43:
-    add $s1, $s4, $s3   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if12    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if12:
-    sub $s1, $s4, $s3   # posicao_matriz -= 4*num_linhas (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, resume  # M[x][y-1] == 9
@@ -166,7 +163,6 @@ calcula_bombas:
     j resume
 
     if01:
-    subi $s5, $a1, 1
     bne $s5, $t0, if02  # x = num_linhas
 
     subi $s1, $s4, 4    # posicao_matriz -= 4 (M[x-1][y]) 
@@ -178,7 +174,7 @@ calcula_bombas:
     if21:
     bne $t1, 0, if22    # y == 0
 
-    add $s1, $s4, $s3   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if44    # M[x][y+1] == 9
@@ -186,7 +182,7 @@ calcula_bombas:
 
     if44:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, resume  # M[x-1][y+1] == 9
@@ -194,10 +190,9 @@ calcula_bombas:
     j resume
 
     if22:
-    subi $s6, $a1, 1
-    bne $s6, $t1, if46  # y == b
+    bne $s5, $t1, if46  # y == b
 
-    sub $s1, $s4, $s3   # posicao_matriz -= 4*num_linhas (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, if45    # M[x][y-1] == 9
@@ -205,7 +200,7 @@ calcula_bombas:
 
     if45:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, resume  # M[x-1][y-1] == 9
@@ -214,7 +209,7 @@ calcula_bombas:
 
     if46:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if47    # M[x-1][y+1] == 9
@@ -222,21 +217,21 @@ calcula_bombas:
 
     if47:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if23    # M[x-1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if23:
-    add $s1, $s4, $s3   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if24    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if24:
-    sub $s1, $s4, $s3   # posicao_matriz -= 4*num_linhas (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, resume  # M[x][y-1] == 9
@@ -260,7 +255,7 @@ calcula_bombas:
     if32:
     bne $t1, 0, if33    # y == 0
 
-    add $s1, $s4, $s3   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if48    # M[x][y+1] == 9
@@ -268,7 +263,7 @@ calcula_bombas:
 
     if48:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if49    # M[x-1][y+1] == 9
@@ -276,7 +271,7 @@ calcula_bombas:
 
     if49:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, resume  # M[x+1][y+1] == 9
@@ -284,11 +279,10 @@ calcula_bombas:
     j resume
 
     if33:
-    subi $s6, $a1, 1
-    bne $s6, $t1, if34  # y == b
+    bne $s5, $t1, if34  # y == b
 
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, if51    # M[x-1][y-1] == 9
@@ -296,14 +290,14 @@ calcula_bombas:
 
     if51:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, if52    # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if52:
-    sub $s1, $s4, $s3   # posicao_matriz -= 4*num_linhas (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
 
     bne $s1, 9, resume  # M[x][y-1] == 9
@@ -311,14 +305,14 @@ calcula_bombas:
     j resume
 
     if34:
-    sub $s1, $s4, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s4, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if53    # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if53:
-    add $s1, $s4, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s4, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if54    # M[x][y+1] == 9
@@ -326,7 +320,7 @@ calcula_bombas:
 
     if54:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if55    # M[x-1][y-1] == 9
@@ -334,7 +328,7 @@ calcula_bombas:
 
     if55:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if56    # M[x-1][y+1] == 9
@@ -342,7 +336,7 @@ calcula_bombas:
 
     if56:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    sub $s1, $s1, $s3   # posicao_matriz -= 4*num_linhas (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 4*num_linhas (y-1)
     lw  $s1, campo($s1) # le posicao campo
     
     bne $s1, 9, if35    # M[x+1][y-1] == 9
@@ -350,13 +344,17 @@ calcula_bombas:
 
     if35:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    add $s1, $s1, $s3   # posicao_matriz += 4*num_linhas (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 4*num_linhas (y+1)
     lw  $s1, campo($s1) # le posicao campo
 
-    beq $s1, 9, resume  # M[x+1][y+1] == 9
+    bne $s1, 9, resume  # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     resume:
+
+    li $v0, 1
+    move $a0, $s0
+    syscall
 
     sw  $s0, user($s4)  # seto o valor de bombas ao redor da posicao
 
@@ -367,14 +365,13 @@ calcula_bombas:
 
 mostra_campo:
     # comeca a printar a matriz user
-
 	li  $v0, 4          # seta valor da operacao
 	la  $a0, campomin   # imprime mensagem para mostrar campo minado
     syscall             # imprime string
 
     add $t2, $zero, $zero  # zerando variavel do for
     add $t7, $zero, $zero  # zerando variavel de adicao de linha
-    mul $t6, $s7, $t7   # calculando linha
+    mul $t6, $t7, 36    # calculando linha
     for:
     add $t4, $zero, $zero  # zerando variavel do for
     beq $t2, $t3, exit  # verifica fim do for
@@ -399,7 +396,7 @@ mostra_campo:
     j for2
     exit2:
     addi $t7, $t7, 1    # adiciona mais 1 por causa da linha
-    mul $t6, $t7, $s7   # adiciona mais uma linha nas posicoes
+    mul $t6, $t7, 36    # adiciona mais uma linha nas posicoes
 
     # printo nova linha
     li $v0, 4
@@ -424,16 +421,16 @@ mostra_campo:
 
     add $t2, $zero, $zero  # zerando variavel do for
     add $t7, $zero, $zero  # zerando variavel de adicao de linha
-    mul $t6, $s7, $t7   # calculando linha
+    mul $t6, , $t7, 36  # calculando linha
     for3:
     add $t4, $zero, $zero  # zerando variavel do for
-    beq $t2, $t3, exit3  # verifica fim do for
+    beq $t2, $t3, exit3 # verifica fim do for
 
     for4:
     beq $t4, $t5, exit4 # verifica fim do for2
 
     add $s1, $t6, $t4
-    lw  $s1, campo($s1)  # salva posicao da matriz
+    lw  $s1, campo($s1) # salva posicao da matriz
 
     # printo um espaco
     li $v0, 4
@@ -449,7 +446,7 @@ mostra_campo:
     j for4
     exit4:
     addi $t7, $t7, 1    # adiciona mais 1 por causa da linha
-    mul $t6, $t7, $s7   # adiciona mais uma linha nas posicoes
+    mul $t6, $t7, 36    # adiciona mais uma linha nas posicoes
 
     # printo nova linha
     li $v0, 4
