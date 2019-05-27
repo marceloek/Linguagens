@@ -40,7 +40,7 @@ main:
     syscall             # imprime string
 
     li	$v0, 5			
-    syscall		# le num_linhas
+    syscall             # le num_linhas
     add $a1, $zero, $v0 # b = num_linhas
 
     subi $s3, $a1, 1    # num_linhas - 1
@@ -57,7 +57,7 @@ main:
     syscall             # imprime string
 
     li	$v0, 5			
-    syscall				# le x
+    syscall             # le x
     add $t0, $zero, $v0 # x (colunas)
     subi $t0, $t0, 1    # x-- (colunas)
 
