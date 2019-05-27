@@ -345,7 +345,7 @@ mostra_campo:
     syscall
     # printo as posicoes
     li $v0, 1
-    move $a0, $s1
+    add $a0, $s1, $zero
     syscall
 
     addi $t3, $t3, 1    # aumento contador de coluna
@@ -390,7 +390,7 @@ mostra_campo:
     syscall
     # printo as posicoes
     li $v0, 1
-    move $a0, $s1
+    add $a0, $s1, $zero
     syscall
 
     addi $t3, $t3, 1    # aumento contador de coluna
