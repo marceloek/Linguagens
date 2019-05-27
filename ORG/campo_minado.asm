@@ -1,4 +1,4 @@
-    .data
+  .data
 user:	                # matriz visualizada pelo usuario
         .word   0,0,0,0,0,0,0,0,0
         .word   0,0,0,0,0,0,0,0,0
@@ -79,6 +79,9 @@ main:
     syscall             # imprime string
 
 calcula_bombas:
+    la $a0, campo       # parametro da matriz campo
+    addi $a1, $a1, 0    # parametro da dimensao da matriz campo
+    
     addi $s0, $zero, 0  # i (contador de bombas)
 
     bne $t0, 0, if01    # x == 0
@@ -410,6 +413,8 @@ mostra_campo:
 
 insere_bombas:
     # codigo da funcao insere bombas aqui
+    la $a0, campo       # parametro da matriz campo
+    addi $a1, $a1, 0    # parametro da dimensao da matriz campo
 
     j continua_main1
 
