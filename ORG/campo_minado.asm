@@ -82,8 +82,8 @@ main:
     add $s4, $s4, $t0       # posicao_matriz += x
     mul $s4, $s4, 4         # posicao_matriz *= 4 (para calculo da posicao)
 
-    lw  $s1, campo($s4)     # le posicao campo
     # verifico se ha bomba na posicao digitada pelo usuario para finalizar o jogo
+    lw  $s1, campo($s4)     # le posicao campo
     bne $s1, 9, calcula_bombas
     addi $s2, $zero, 1      # seto fim de jogo
     li  $v0, 4              # seta valor da operacao
