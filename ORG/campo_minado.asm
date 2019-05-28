@@ -74,9 +74,9 @@ main:
     subi $t1, $t1, 1    # y-- (linhas)
 
     # variaveis para controle de posicao da matriz:
-    mul $s4, $t1, 9     # posicao_matriz = y * dimensao da matriz
+    mul $s4, $t1, 9     # posicao_matriz = y * dimensao da matriz (9)
     add $s4, $s4, $t0   # posicao_matriz += x
-    mul $s4, $s4, 4     # posicao_matriz *= 4 (para calculo da posicao
+    mul $s4, $s4, 4     # posicao_matriz *= 4 (para calculo da posicao)
 
     lw  $s1, campo($s4) # le posicao campo
     bne $s1, 9, calcula_bombas
@@ -101,14 +101,14 @@ calcula_bombas:
     if05:
     bne $t1, 0, if10    # y == 0
 
-    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += 36 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if40    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if40:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo 
     bne $s1, 9, resume  # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
@@ -117,14 +117,14 @@ calcula_bombas:
     if10:
     bne $s3, $t1, if11  # y == b
 
-    subi $s1, $s4, 36   # posicao_matriz -= 4*dimensao da matriz (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 36 (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if41    # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if41:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
@@ -132,26 +132,26 @@ calcula_bombas:
 
     if11:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if42    # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if42:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if43    # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if43:
-    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += 36 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if12    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if12:
-    subi $s1, $s4, 36   # posicao_matriz -= 4*dimensao da matriz (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 36 (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
@@ -168,14 +168,14 @@ calcula_bombas:
     if21:
     bne $t1, 0, if22    # y == 0
 
-    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += 36 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if44    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if44:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x-1][y+1] == 9
     addi $s0, $s0, 1    # i++
@@ -184,14 +184,14 @@ calcula_bombas:
     if22:
     bne $s3, $t1, if46  # y == b
 
-    subi $s1, $s4, 36   # posicao_matriz -= 4*dimensao da matriz (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 36 (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if45    # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if45:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x-1][y-1] == 9
     addi $s0, $s0, 1    # i++
@@ -199,26 +199,26 @@ calcula_bombas:
 
     if46:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if47    # M[x-1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if47:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if23    # M[x-1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if23:
-    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += 36 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if24    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if24:
-    subi $s1, $s4, 36   # posicao_matriz -= 4*dimensao da matriz (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 36 (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
@@ -239,21 +239,21 @@ calcula_bombas:
     if32:
     bne $t1, 0, if33    # y == 0
 
-    addi $s1, $s4, 36   # posicao_matriz += y + 1 (M[x][y+1])
+    addi $s1, $s4, 36   # posicao_matriz += 36 (M[x][y+1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if48    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if48:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if49    # M[x-1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if49:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
@@ -263,61 +263,61 @@ calcula_bombas:
     bne $s3, $t1, if34  # y == b
 
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if51    # M[x-1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if51:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if52    # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if52:
-    subi $s1, $s4, 36   # posicao_matriz -= 4*dimensao da matriz (M[x][y-1])
+    subi $s1, $s4, 36   # posicao_matriz -= 36 (M[x][y-1])
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
     j resume
 
     if34:
-    subi $s1, $s4, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s4, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if53    # M[x][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if53:
-    addi $s1, $s4, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s4, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if54    # M[x][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if54:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if55    # M[x-1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if55:
     subi $s1, $s4, 4    # posicao_matriz -= 4 (x-1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if56    # M[x-1][y+1] == 9
     addi $s0, $s0, 1    # i++
 
     if56:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    subi $s1, $s1, 36   # posicao_matriz -= 4*dimensao da matriz (y-1)
+    subi $s1, $s1, 36   # posicao_matriz -= 36 (y-1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, if35    # M[x+1][y-1] == 9
     addi $s0, $s0, 1    # i++
 
     if35:
     addi $s1, $s4, 4    # posicao_matriz += 4 (x+1)
-    addi $s1, $s1, 36   # posicao_matriz += 4*dimensao da matriz (y+1)
+    addi $s1, $s1, 36   # posicao_matriz += 36 (y+1)
     lw  $s1, campo($s1) # le posicao campo
     bne $s1, 9, resume  # M[x+1][y+1] == 9
     addi $s0, $s0, 1    # i++
