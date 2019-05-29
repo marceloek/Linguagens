@@ -23,7 +23,7 @@ void mostra_campo(int campo[9][9], int user[9][9], int b, int a)
 
 void calcula_bomba(int campo[9][9], int b)
 {
-    int i = 0;
+    int j = b - 1;
     for (int x = 0; x < b; x++)
     {
         for (int y = 0; y < b; y++)
@@ -32,21 +32,21 @@ void calcula_bomba(int campo[9][9], int b)
             if (campo[x][y] == 9)
                 continue;
 
-            if (x - 1 != -1 && y - 1 != -1 && campo[x - 1][y - 1] == 9)
+            if (x != 0 && y != 0 && campo[x - 1][y - 1] == 9)
                 i++;
-            if (x - 1 != -1 && campo[x - 1][y] == 9)
+            if (x != 0 && campo[x - 1][y] == 9)
                 i++;
-            if (x - 1 != -1 && y + 1 != b && campo[x - 1][y + 1] == 9)
+            if (x != 0 && y != j && campo[x - 1][y + 1] == 9)
                 i++;
-            if (y - 1 != -1 && campo[x][y - 1] == 9)
+            if (y != 0 && campo[x][y - 1] == 9)
                 i++;
-            if (y + 1 != b && campo[x][y + 1] == 9)
+            if (y != j && campo[x][y + 1] == 9)
                 i++;
-            if (x + 1 != b && y - 1 != -1 && campo[x + 1][y - 1] == 9)
+            if (x != j && y != 0 && campo[x + 1][y - 1] == 9)
                 i++;
-            if (x + 1 != b && campo[x + 1][y] == 9)
+            if (x != j && campo[x + 1][y] == 9)
                 i++;
-            if (x + 1 != b && y + 1 != b && campo[x + 1][y + 1] == 9)
+            if (x != j && y != j && campo[x + 1][y + 1] == 9)
                 i++;
             campo[x][y] = i;
         }
