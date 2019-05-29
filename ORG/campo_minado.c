@@ -1,121 +1,56 @@
 #include <stdio.h>
 
-void mostra_campo(int user[9][9], int b)
+void mostra_campo(int campo[9][9], int user[9][9], int b, int a)
 {
+    puts("SITUACAO DO CAMPO MINADO");
     for (int i = 0; i < b; i++)
     {
         for (int j = 0; j < b; j++)
         {
-            printf("%d ", user[i][j]);
+            if (a == 1 && campo[i][j] == 9)
+            {
+                printf(" 9 ");
+                continue;
+            }
+            if (user[i][j] == -1)
+                printf("%d ", user[i][j]);
+            else
+                printf(" %d ", user[i][j]);
         }
         puts("");
     }
 }
 
-void calcula_bomba(int campo[9][9], int user[9][9], int x, int y, int b)
+void calcula_bomba(int campo[9][9], int b)
 {
     int i = 0;
-    if (x == 0)
+    for (int x = 0; x < b; x++)
     {
-        if (campo[x + 1][y] == 9)
-            i++;
-        if (y == 0)
+        for (int y = 0; y < b; y++)
         {
-            if (campo[x][y + 1] == 9)
+            int i = 0;
+            if (campo[x][y] == 9)
+                continue;
+
+            if (x - 1 != -1 && y - 1 != -1 && campo[x - 1][y - 1] == 9)
                 i++;
-            if (campo[x + 1][y + 1] == 9)
+            if (x - 1 != -1 && campo[x - 1][y] == 9)
                 i++;
-        }
-        else if (y == b - 1)
-        {
-            if (campo[x][y - 1] == 9)
+            if (x - 1 != -1 && y + 1 != b && campo[x - 1][y + 1] == 9)
                 i++;
-            if (campo[x + 1][y - 1] == 9)
+            if (y - 1 != -1 && campo[x][y - 1] == 9)
                 i++;
-        }
-        else
-        {
-            if (campo[x + 1][y - 1] == 9)
+            if (y + 1 != b && campo[x][y + 1] == 9)
                 i++;
-            if (campo[x + 1][y + 1] == 9)
+            if (x + 1 != b && y - 1 != -1 && campo[x + 1][y - 1] == 9)
                 i++;
-            if (campo[x][y + 1] == 9)
+            if (x + 1 != b && campo[x + 1][y] == 9)
                 i++;
-            if (campo[x][y - 1] == 9)
+            if (x + 1 != b && y + 1 != b && campo[x + 1][y + 1] == 9)
                 i++;
+            campo[x][y] = i;
         }
     }
-    else if (x == b - 1)
-    {
-        if (campo[x - 1][y] == 9)
-            i++;
-        if (y == 0)
-        {
-            if (campo[x][y + 1] == 9)
-                i++;
-            if (campo[x - 1][y + 1] == 9)
-                i++;
-        }
-        else if (y == b - 1)
-        {
-            if (campo[x][y - 1] == 9)
-                i++;
-            if (campo[x - 1][y - 1] == 9)
-                i++;
-        }
-        else
-        {
-            if (campo[x][y - 1] == 9)
-                i++;
-            if (campo[x][y + 1] == 9)
-                i++;
-            if (campo[x - 1][y - 1] == 9)
-                i++;
-            if (campo[x - 1][y + 1] == 9)
-                i++;
-        }
-    }
-    else
-    {
-        if (campo[x + 1][y] == 9)
-            i++;
-        if (campo[x - 1][y] == 9)
-            i++;
-        if (y == 0)
-        {
-            if (campo[x][y + 1] == 9)
-                i++;
-            if (campo[x - 1][y + 1] == 9)
-                i++;
-            if (campo[x + 1][y + 1] == 9)
-                i++;
-        }
-        else if (y == b - 1)
-        {
-            if (campo[x - 1][y - 1] == 9)
-                i++;
-            if (campo[x + 1][y - 1] == 9)
-                i++;
-            if (campo[x][y - 1] == 9)
-                i++;
-        }
-        else
-        {
-            if (campo[x][y - 1] == 9)
-                i++;
-            if (campo[x][y + 1] == 9)
-                i++;
-            if (campo[x - 1][y - 1] == 9)
-                i++;
-            if (campo[x - 1][y + 1] == 9)
-                i++;
-            if (campo[x + 1][y - 1] == 9)
-                i++;
-            if (campo[x + 1][y + 1] == 9)
-                i++;
-        }
-    }
-    user[x][y] = i;
 }
 
 int main()
@@ -131,52 +66,46 @@ int main()
         {0, 9, 9, 0, 9, 0, 9, 0, 0},
         {9, 0, 0, 9, 0, 9, 0, 0, 9}};
     int user[9][9] = {
-        {1, 2, 3, 0, 0, 0, 0, 0, 0},
-        {4, 5, 6, 0, 0, 0, 0, 0, 0},
-        {7, 8, 9, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1}};
     int x, y, b;
-    puts("Digite a dificuldade do campo minado, exemplo: 5 = 5x5, 7 = 7x7 ou 9 = 9x9:");
-    scanf("%d", &b);
-    if (b == 5 || b == 7 || b == 9)
-        printf("\n\nDificuldade escolhida foi: %d!\n", b);
-    else
-        printf("\nO valor digitado eh invalido!");
+    while (1)
+    {
+        puts("Digite a dificuldade do campo minado, exemplo: 5 = 5x5, 7 = 7x7 ou 9 = 9x9:");
+        scanf("%d", &b);
+        if (b == 5 || b == 7 || b == 9)
+            break;
+        printf("\nO valor digitado eh invalido! Tente novamente!\n");
+    }
+    //insere_bombas(campo, b);
+    calcula_bomba(campo, b);
 
     for (int i = 0; i < 81; i++)
     {
-        mostra_campo(user, b);
+        int a = 0;
+        mostra_campo(campo, user, b, a);
         puts("\nDigite as coordenadas do campo minado (coluna)(linha): ");
         scanf("%d", &y);
         scanf("%d", &x);
         puts("");
+        if (y > b || x > b)
+            continue;
         x--;
         y--;
+        user[x][y] = campo[x][y];
         if (campo[x][y] == 9)
         {
+            a = 1;
             printf("\nA BOMBA EXPLODIU! VOCE PERDEU!\n");
-            calcula_bomba(campo, user, x, y, b);
-            mostra_campo(user, b);
-            puts("\nLOCALIZACAO DAS BOMBAS:\n");
-            for (int i = 0; i < b; i++)
-            {
-                for (int j = 0; j < b; j++)
-                {
-                    printf("%d ", campo[i][j]);
-                }
-                puts("");
-            }
+            mostra_campo(campo, user, b, a);
             break;
-        }
-        else
-        {
-            calcula_bomba(campo, user, x, y, b);
         }
     }
 }
