@@ -5,7 +5,7 @@
     # TODAS AS VARIAVEIS UTILIZADAS E OS REGISTRADORES:
     # $a0 = matriz campo                    $s3 - posicao da matriz
     # $a1 = num_linhas                      $t0 = coordenada x  
-    # $a2 = campo user                      $t1 = coordenada y
+    # $a2 = matriz user                     $t1 = coordenada y
     # $a3 = variavel fim de jogo            $t2 = contador de linha 
     # $s0 = contador de bombas              $t3 = contador de coluna
     # $s1 = posicao de referencia da matriz $t4 = verificador slt
