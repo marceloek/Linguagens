@@ -3,7 +3,7 @@
     ##############################################################################
     
     # TODAS AS VARIAVEIS UTILIZADAS E OS REGISTRADORES:
-    # $a0 = matriz campo                    $s3 - posicao da matriz
+    # $a0 = matriz campo                    $s3 = posicao da matriz
     # $a1 = num_linhas                      $t0 = coordenada x  
     # $a2 = matriz user                     $t1 = coordenada y
     # $a3 = variavel fim de jogo            $t2 = contador de linha 
