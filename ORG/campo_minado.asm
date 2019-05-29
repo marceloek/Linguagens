@@ -82,17 +82,17 @@ main:
         la  $a0, coordena       # imprime mensagem para inserir posicao
         syscall                 # imprime string
 
-        li	$v0, 5              # seta valor da operacao
+        li  $v0, 5              # seta valor da operacao
         syscall                 # le x
         add $t0, $zero, $v0     # x (colunas)
         subi $t0, $t0, 1        # x-- (colunas)
 
-        li	$v0, 5              # seta valor da operacao
+        li  $v0, 5              # seta valor da operacao
         syscall                 # le y
         add $t1, $zero, $v0     # y (linhas)
         subi $t1, $t1, 1        # y-- (linhas)
 
-        slt $t4, $t0, $a1        # verifica escolha de coordenada
+        slt $t4, $t0, $a1       # verifica escolha de coordenada
         beq $t4, 1, else1
         li  $v0, 4              # seta valor da operacao
         la  $a0, coordinv       # imprime mensagem de coordernadas invalidas
@@ -100,7 +100,7 @@ main:
         j continua_main11
 
         else1:
-        slt $t4, $t1, $a1        # verifica escolha de coordenada
+        slt $t4, $t1, $a1       # verifica escolha de coordenada
         beq $t4, 1, else2
         li  $v0, 4              # seta valor da operacao
         la  $a0, coordinv       # imprime mensagem de coordernadas invalidas
@@ -130,11 +130,11 @@ main:
         add $s1, $s1, $t0       # posicao_matriz += x
         mul $s1, $s1, 4         # posicao_matriz *= 4 (para calculo da posicao)
 
-        # verifico se ha bomba na posicao digitada pelo usuario para finalizar o jogo
+        # verifica se ha bomba na posicao digitada pelo usuario para finalizar o jogo
         lw  $t5, campo($s1)     # le posicao campo
-        sw  $t5, user($s1)      # salvo valor de campo[x][y] em user[x][y]
+        sw  $t5, user($s1)      # salva valor de campo[x][y] em user[x][y]
         bne $t5, 9, mostra_campo
-        addi $a3, $zero, 1      # seto fim de jogo
+        addi $a3, $zero, 1      # seta fim de jogo
         li  $v0, 4              # seta valor da operacao
         la  $a0, fim_jogo       # salva mensagem de fim de jogo
         syscall                 # imprime string
@@ -157,7 +157,7 @@ mostra_campo:
         beq $t2, $a1, exit      # verifica fim do for
 
         for2:
-        addi $t3, $t3, 1        # aumento contador de coluna
+        addi $t3, $t3, 1        # aumenta contador de coluna
         beq $t3, $a1, exit1     # verifica fim do for2
 
         mul $s1, $t2, 9         # posicao_matriz = y * dimensao da matriz (9)
@@ -177,7 +177,7 @@ mostra_campo:
         li $v0, 4
         la $a0, imprnove
         syscall
-        j for2                  # volta pro for2 porque o valor é bomba
+        j for2                  # volta para for2 porque o valor é bomba
 
         if20:                   # verifica necessidade de imprimir espaco
         beq $s3, -1, if21
@@ -192,7 +192,7 @@ mostra_campo:
         add $a0, $s3, $zero
         syscall
 
-        j for2                  # volta pro for2
+        j for2                  # volta para for2
         exit1:
         # imprime uma barra
         li $v0, 4
@@ -203,11 +203,11 @@ mostra_campo:
         la $a0, novalinh
         syscall
         addi $t2, $t2, 1        # aumenta contador de linha
-        j for                   # volta pro for
+        j for                   # volta para for
         exit:
         
         beq $a3, 1, final       # termina o jogo, senao continua o jogo
-        j continua_main11       # continua o jogo e volta para main11
+        j continua_main11       # continua o jogo e volta para continua_main11
 
 calcula_bombas:
         la $a0, campo           # parametro da matriz campo
@@ -221,7 +221,7 @@ calcula_bombas:
 
         for11:
         addi $s0, $zero, 0      # resetando contador de bombas
-        addi $t3, $t3, 1        # aumento contador de coluna
+        addi $t3, $t3, 1        # aumenta contador de coluna
         beq $t3, $a1, fim2      # verifica fim do for11
 
         mul $s1, $t2, 9         # posicao_matriz = y * dimensao da matriz (9)
@@ -231,7 +231,7 @@ calcula_bombas:
         lw  $s3, campo($s1)     # salva posicao da matriz
 
         bne $s3, 9, if01        # verifica posicao da matriz se é igual a 9
-        j for11                 # volta pro for11
+        j for11                 # volta para for11 porque o valor é bomba
 
         if01:
 
@@ -308,14 +308,14 @@ calcula_bombas:
 
         resume:
 
-        sw  $s0, campo($s1)      # seto o valor de bombas ao redor da posicao
+        sw  $s0, campo($s1)     # seta o valor de bombas ao redor da posicao
  
-        j for11                 # volta pro for11 porque o valor é bomba
+        j for11                 # volta para for11
 
         fim2:
 
         addi $t2, $t2, 1        # aumenta contador de linha
-        j for10                 # volta pro for10
+        j for10                 # volta para for10
 
         fim1:
         j continua_main10
