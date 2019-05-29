@@ -76,6 +76,7 @@ int main()
         {-1, -1, -1, -1, -1, -1, -1, -1, -1},
         {-1, -1, -1, -1, -1, -1, -1, -1, -1}};
     int x, y, b;
+    int a = 0;
     while (1)
     {
         puts("Digite a dificuldade do campo minado, exemplo: 5 = 5x5, 7 = 7x7 ou 9 = 9x9:");
@@ -87,9 +88,8 @@ int main()
     //insere_bombas(campo, b);
     calcula_bomba(campo, b);
 
-    for (int i = 0; i < 81; i++)
+    while(1)
     {
-        int a = 0;
         mostra_campo(campo, user, b, a);
         puts("\nDigite as coordenadas do campo minado (coluna)(linha): ");
         scanf("%d", &y);
