@@ -136,7 +136,7 @@ main:
         mul $s1, $s1, 4         # posição_matriz *= 4 (para cálculo da posição)
 
         lw  $s3, campo($s1)     # salva endereço da posição campo
-        sw  $s3, user($s1)      # salva valor de campo[x1][y1] em user[x1][y1]
+        sw  $s3, user($s1)      # salva valor de campo[x][y] em user[x][y]
         # verifica se há bomba na posição digitada pelo usuário para finalizar o jogo
         bne $s3, 9, continua
         addi $a3, $zero, 1      # seta variável de fim de jogo para 1
