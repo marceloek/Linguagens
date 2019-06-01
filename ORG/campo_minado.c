@@ -88,14 +88,14 @@ int main()
     //insere_bombas(campo, b);
     calcula_bomba(campo, b);
 
-    while(1)
+    while (1)
     {
         mostra_campo(campo, user, b, a);
         puts("\nDigite as coordenadas do campo minado (coluna)(linha): ");
         scanf("%d", &y);
         scanf("%d", &x);
         puts("");
-        if (y > b || x > b)
+        if (y > b || x > b || x == 0 || y == 0)
             continue;
         x--;
         y--;
