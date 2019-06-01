@@ -154,7 +154,8 @@ main:
         j continua_main0        # continua o jogo printando o campo minado e pedindo outra coordenada
 
 mostra_campo:                   # void mostra_campo(int * campo[], int num_linhas, int * user[], int fim_jogo)
-        # essa função imprimirá a matriz user
+        # essa função imprimirá a matriz user, mas necessita da matriz campo e da variável fim_jogo para saber
+        # se será impresso uma bomba ou não
         
         add $s4, $a0, $zero     # salva endereço da matriz campo
 
@@ -162,11 +163,11 @@ mostra_campo:                   # void mostra_campo(int * campo[], int num_linha
         la  $a0, campomin       # imprime mensagem para mostrar campo minado
         syscall                 # imprime string
 
-        add $t2, $zero, $zero   # reseta variável do for que percorre as linhas
+        add $t2, $zero, $zero   # reseta variável do laço que percorre as linhas
 
         for:
-        addi $t3, $zero, -1     # reseta variável do for que percorre as colunas; é setado com valor -1 
-        # pelo fato de haver um "continue" na função, necessitando de um ++ no início do for para
+        addi $t3, $zero, -1     # reseta variável do laço que percorre as colunas; é setado com valor -1 
+        # pelo fato de haver um "continue" na função, necessitando de um ++ no início do laço para
         # ignorar a posição da matriz que o chamou e para começar da posição 0 e não da posição 1
         beq $t2, $a1, exit      # verifica fim do for
 
@@ -189,7 +190,7 @@ mostra_campo:                   # void mostra_campo(int * campo[], int num_linha
         
         # verifica variável de fim de jogo para saber o que imprimir; se a posição é bomba entao 
         # imprime a bomba e não a posição da matriz user, depois retorna, como um "continue",
-        # para o for continuar a imprimir as demais posições
+        # para o laço continuar a imprimir as demais posições
         bne $a3, 1, if20        
         bne $t5, 9, if20        # verifica se a posição da matriz campo[x1][y1] == 9
         # imprime valor 9
@@ -230,13 +231,13 @@ mostra_campo:                   # void mostra_campo(int * campo[], int num_linha
         jr $ra
 
 calcula_bombas:                 # void calcula_bombas(int * campo[], int num_linhas);
-        add $t2, $zero, $zero   # reseta variável do for que percorre as linhas
+        add $t2, $zero, $zero   # reseta variável do laço que percorre as linhas
 
         for10:
-        addi $t3, $zero, -1     # reseta variável do for que percorre as colunas; é setado com valor -1 
-        # pelo fato de haver um "continue" na função, necessitando de um ++ no início do for para
+        addi $t3, $zero, -1     # reseta variável do laço que percorre as colunas; é setado com valor -1 
+        # pelo fato de haver um "continue" na função, necessitando de um ++ no início do laço para
         # ignorar a posição da matriz que o chamou e para começar da posição 0 e não da posição 1
-        beq $t2, $a1, fim1      # verifica fim do for
+        beq $t2, $a1, fim1      # verifica fim do for10
 
         for11:
         add $s0, $zero, $zero   # reseta contador de bombas
@@ -250,7 +251,7 @@ calcula_bombas:                 # void calcula_bombas(int * campo[], int num_lin
         add $s3, $s1, $a0       # calcula endereço da matriz campo[x1][y1]
         lw  $s3, 0($s3)         # salva posição da matriz
 
-        # verifica a posição é bomba; se ela é retorna, como um "continue", para o for
+        # verifica se a posição é bomba; se ela for, retorna, como um "continue", para o laço
         # para ignorar essa posição, já que não preciso saber o número de bombas ao redor
         # de uma posição que já é bomba
         bne $s3, 9, if01        # verifica se posição da matriz campo[x1][y1] == 9
