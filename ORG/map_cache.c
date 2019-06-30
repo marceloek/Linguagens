@@ -19,10 +19,15 @@ typedef struct bloco
     int vet2[4];
 } bloco;
 
-void bin(int num)
+void bin(int num, int bit, int aux, int aux1)
 {
-    int bin[7], aux;
-    for (aux = 6; aux >= 0; aux--)
+    int x;
+    if (bit == 1)
+        x = 3;
+    else
+        x = 7;
+    int bin[x];
+    for (; aux >= 0; aux--)
     {
         if (num % 2 == 0)
             bin[aux] = 0;
@@ -30,22 +35,7 @@ void bin(int num)
             bin[aux] = 1;
         num = num / 2;
     }
-    for (aux = 0; aux < 7; aux++)
-        printf("%d", bin[aux]);
-}
-
-void bin2(int num)
-{
-    int bin[3], aux;
-    for (aux = 2; aux >= 0; aux--)
-    {
-        if (num % 2 == 0)
-            bin[aux] = 0;
-        else
-            bin[aux] = 1;
-        num = num / 2;
-    }
-    for (aux = 0; aux < 3; aux++)
+    for (aux = 0; aux < aux1; aux++)
         printf("%d", bin[aux]);
 }
 
@@ -63,7 +53,7 @@ void main()
         for (int i = 0; i < 128; i++)
         {
             printf("\n\tCelula[");
-            bin(i);
+            bin(i,0,6,7);
             printf("]: %d", mp[i]);
         }
         puts("\n\n----------------------------------------------------------");
@@ -71,7 +61,7 @@ void main()
         for (int i = 0; i < 8; i++)
         {
             printf("\nLinha[");
-            bin2(i);
+            bin(i, 1, 2, 3);
             printf("]:");
             for (int j = 0; j < 4; j++)
             {
