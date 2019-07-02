@@ -19,14 +19,9 @@ typedef struct bloco
     int vet2[4];
 } bloco;
 
-void bin(int num, int bit, int aux, int aux1)
+void bin(int num, int bits)
 {
-    int x;
-    if (bit == 1)
-        x = 3;
-    else
-        x = 7;
-    int bin[x];
+    int aux = bits-1, bin[bits];
     for (; aux >= 0; aux--)
     {
         if (num % 2 == 0)
@@ -35,17 +30,22 @@ void bin(int num, int bit, int aux, int aux1)
             bin[aux] = 1;
         num = num / 2;
     }
-    for (aux = 0; aux < aux1; aux++)
+    for (aux = 0; aux < bits; aux++)
         printf("%d", bin[aux]);
 }
 
 void main()
 {
     struct linha vetor_linha[8];
-    int bloco[32], mp[128];
+    int bloco[32], mp[128], ender[8];
     for (int i = 0; i < 128; i++)
-        mp[i] = rand() % 500;
-    // 4294967296;
+        mp[i] = rand() % 1024;
+    for (int i = 0; i < 8; i++){
+        vetor_linha[i].pol_sub = 0;
+        vetor_linha[i].rotulo = -1;
+        for (int j = 0; j < 4; j++)
+            vetor_linha[i].vet1[j]=-1;
+	}
     int endereco, n, op;
     do
     {
@@ -53,23 +53,47 @@ void main()
         for (int i = 0; i < 128; i++)
         {
             printf("\n\tCelula[");
-            bin(i,0,6,7);
-            printf("]: %d", mp[i]);
+            bin(i, 7);
+            printf("]: ");
+            bin(mp[i], 10);
         }
-        puts("\n\n----------------------------------------------------------");
-        printf("\n\t\tMEMORIA CACHE\n");
+        puts("\n\n---------------------------------------------------------------");
+        printf("\n\t\t\tMEMORIA CACHE\n");
+        puts("\n                    00           01           10           11\n");
         for (int i = 0; i < 8; i++)
         {
-            printf("\nLinha[");
-            bin(i, 1, 2, 3);
-            printf("]:");
+        	printf("\nRótulo[");
+            if(vetor_linha[i].rotulo==-1)
+                printf("------");
+            else
+                bin(vetor_linha[i].rotulo, 6);
+            printf("] ");
             for (int j = 0; j < 4; j++)
             {
-                printf(" | %d ", vetor_linha[i].vet1[j]);
+                printf("|");
+                if(vetor_linha[i].vet1[j]==-1)
+                	printf("----------");
+                else
+                	bin(vetor_linha[i].vet1[j], 10);
+                printf("| ");
+            }
+            printf("[");
+            bin(i, 3);
+            printf("]");
+        }
+        puts("\n\n---------------------------------------------------------------");
+        for (int j = 0; j < 4; j++)
+        {
+            if (vetor_linha[j].pol_sub == 0)
+            {
+                printf("Proxima localizacao: Linha [");
+                bin(j, 3);
+                printf("]");
+                break;
             }
         }
-        puts("\n\n----------------------------------------------------------");
-        puts("\n\t\tMENU\n");
+        puts("\n---------------------------------------------------------------");
+        puts("\n\t\t\tMENU\n");
         puts("(1) Para ler o conteudo de um endereco da memoria;");
         puts("(2) Para escrever em um determinado endereco da memoria;");
         puts("(3) Para apresentar as estatisticas de acertos e faltas;");
@@ -79,13 +103,17 @@ void main()
         switch (op)
         {
         case 1:
-            printf("\nDigite o endereco desejado:\n");
+            printf("\nDigite o endereco desejado a ser lido:\n");
             scanf("%d", &endereco);
+            sprintf(ender, "%d", endereco);
+            printf("%s", ender);
 
             break;
         case 2:
-            printf("\nDigite o endereco desejado:\n");
+            printf("\nDigite o endereco desejado a ser escrito:\n");
             scanf("%d", &endereco);
+            sprintf(ender, "%d", endereco);
+            printf("%s", ender);
 
             break;
         case 3:
