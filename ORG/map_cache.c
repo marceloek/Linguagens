@@ -19,6 +19,18 @@ typedef struct bloco
     int vet2[4];
 } bloco;
 
+int dec(int bits, char num[bits])
+{
+    int cont=0, cont2=1;
+    for (int i=bits-1; i >= 0; i--)
+    {
+        if(num[i]=='1')
+            cont+=cont2;
+        cont2*=2;
+    }
+    return cont;
+}
+
 void bin(int num, int bits)
 {
     int aux = bits-1, bin[bits];
@@ -28,7 +40,7 @@ void bin(int num, int bits)
             bin[aux] = 0;
         else
             bin[aux] = 1;
-        num = num / 2;
+        num /= 2;
     }
     for (aux = 0; aux < bits; aux++)
         printf("%d", bin[aux]);
@@ -37,16 +49,17 @@ void bin(int num, int bits)
 void main()
 {
     struct linha vetor_linha[8];
-    int bloco[32], mp[128], ender[8];
+    int bloco[32], mp[128], linha2, rotulo3, acertos, faltas, j=0;
+    char endereco[7], linha[2], rotulo2[3];
     for (int i = 0; i < 128; i++)
-        mp[i] = rand() % 1024;
+        mp[i] = rand() % 128;
     for (int i = 0; i < 8; i++){
         vetor_linha[i].pol_sub = 0;
         vetor_linha[i].rotulo = -1;
         for (int j = 0; j < 4; j++)
             vetor_linha[i].vet1[j]=-1;
 	}
-    int endereco, n, op;
+    int n, op;
     do
     {
         printf("\n\tMEMORIA PRINCIPAL\n");
@@ -55,11 +68,11 @@ void main()
             printf("\n\tCelula[");
             bin(i, 7);
             printf("]: ");
-            bin(mp[i], 10);
+            bin(mp[i], 7);
         }
         puts("\n\n---------------------------------------------------------------");
         printf("\n\t\t\tMEMORIA CACHE\n");
-        puts("\n                    00           01           10           11\n");
+        puts("\n                    00           01           10           11");
         for (int i = 0; i < 8; i++)
         {
         	printf("\nRótulo[");
@@ -74,23 +87,27 @@ void main()
                 if(vetor_linha[i].vet1[j]==-1)
                 	printf("----------");
                 else
-                	bin(vetor_linha[i].vet1[j], 10);
+                	bin(vetor_linha[i].vet1[j], 7);
                 printf("| ");
             }
             printf("[");
             bin(i, 3);
             printf("]");
         }
-        puts("\n\n---------------------------------------------------------------");
-        for (int j = 0; j < 4; j++)
+        printf("\n\n---------------------------------------------------------------");
+        while (j < 8)
         {
-            if (vetor_linha[j].pol_sub == 0)
-            {
-                printf("Proxima localizacao: Linha [");
-                bin(j, 3);
-                printf("]");
-                break;
-            }
+        	for(int i=0; i < 2; i++)
+        	{
+	            if (vetor_linha[j+i].pol_sub == 0)
+	            {
+	                printf("\nProxima localizacao: Linha [");
+	                bin(j+i, 3);
+	                printf("]");
+	                break;
+	            }
+	        }
+	        j+=2;
         }
         puts("\n---------------------------------------------------------------");
         puts("\n\t\t\tMENU\n");
@@ -104,16 +121,33 @@ void main()
         {
         case 1:
             printf("\nDigite o endereco desejado a ser lido:\n");
-            scanf("%d", &endereco);
-            sprintf(ender, "%d", endereco);
-            printf("%s", ender);
+            scanf("%s", &endereco);
+            dec(7,endereco);
+            //0 0 0 0 1 0 1
+            linha[0]=endereco[3];
+            linha[1]=endereco[4];
+            rotulo2[0] = endereco[0];
+            rotulo2[1] = endereco[1];
+            rotulo2[2] = endereco[2];
+            linha2 = dec(2,linha);
+            linha2 %= 2;
+        	printf("Linha2: %d", linha2);
+            rotulo3 = dec(3,rotulo2);
+        	for(int i=0; i < 2; i++)
+        	{
+        		if(vetor_linha[linha2+i].rotulo==rotulo3){
+		            if (vetor_linha[linha2+i].pol_sub == 0)
+		            {
+		            	printf("nada\n");
+		            }
+	        	}
+	        }
 
             break;
         case 2:
-            printf("\nDigite o endereco desejado a ser escrito:\n");
-            scanf("%d", &endereco);
-            sprintf(ender, "%d", endereco);
-            printf("%s", ender);
+            printf("\nDigite o endereco desejado a ser lido:\n");
+            scanf("%s", &endereco);
+            dec(7,endereco);
 
             break;
         case 3:
