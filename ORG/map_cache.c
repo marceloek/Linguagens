@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// 10) Map. Associativo por Conjuntos (2)
-// escrita no retorno
-// LRU (Mais Antigo é Substituido)
-// Alunos: Kevin + Marcelo
-
 typedef struct linha
 {
     int vet1[4];
+    int dirty;
     int rotulo;
     int valido;
     int pol_sub;
 } linha;
+
+typedef struct conjunto
+{
+    struct linha vetor_linha[2];
+} conjunto;
 
 typedef struct bloco
 {
@@ -21,19 +22,19 @@ typedef struct bloco
 
 int dec(int bits, char num[bits])
 {
-    int cont=0, cont2=1;
-    for (int i=bits-1; i >= 0; i--)
+    int cont = 0, cont2 = 1;
+    for (int i = bits - 1; i >= 0; i--)
     {
-        if(num[i]=='1')
-            cont+=cont2;
-        cont2*=2;
+        if (num[i] == '1')
+            cont += cont2;
+        cont2 *= 2;
     }
     return cont;
 }
 
 void bin(int num, int bits)
 {
-    int aux = bits-1, bin[bits];
+    int aux = bits - 1, bin[bits];
     for (; aux >= 0; aux--)
     {
         if (num % 2 == 0)
@@ -46,70 +47,98 @@ void bin(int num, int bits)
         printf("%d", bin[aux]);
 }
 
-void main()
-{
-    struct linha vetor_linha[8];
-    int bloco[32], mp[128], linha2, rotulo3, acertos, faltas, j=0;
-    char endereco[7], linha[2], rotulo2[3];
-    for (int i = 0; i < 128; i++)
-        mp[i] = rand() % 128;
-    for (int i = 0; i < 8; i++){
-        vetor_linha[i].pol_sub = 0;
-        vetor_linha[i].rotulo = -1;
-        for (int j = 0; j < 4; j++)
-            vetor_linha[i].vet1[j]=-1;
-	}
-    int n, op;
-    do
+void print_mem(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4]){
+    printf("\n\tMEMORIA PRINCIPAL\n");
+    for (int i = 0; i < 32; i++)
     {
-        printf("\n\tMEMORIA PRINCIPAL\n");
-        for (int i = 0; i < 128; i++)
-        {
+    	for (int j = 0;  j < 4; j++)
+    	{
             printf("\n\tCelula[");
-            bin(i, 7);
+            bin(i*4+j, 7);
             printf("]: ");
-            bin(mp[i], 7);
-        }
-        puts("\n\n---------------------------------------------------------------");
-        printf("\n\t\t\tMEMORIA CACHE\n");
-        puts("\n                    00           01           10           11");
-        for (int i = 0; i < 8; i++)
+            bin(vetor_bloco[i].vet2[j], 8);
+		}
+    }
+    puts("\n\n------------------------------------------------------------------");
+    printf("\n\t\t\tMEMORIA CACHE\n");
+    puts("\n|P_S| |VALIDO| |DIRTY| |ROTULO | |   00   | |   01   | |   10   | |   11   | |LINHA| |CONJUNTOS|");
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0;  j < 2; j++)
         {
-        	printf("\nRótulo[");
-            if(vetor_linha[i].rotulo==-1)
-                printf("------");
+            printf("|");
+            bin(vetor_conjunto[i].vetor_linha[j].pol_sub,3);
+            printf("| ");
+            printf("|   %d  |", vetor_conjunto[i].vetor_linha[j].valido);
+            printf(" |  %d  | |  ", vetor_conjunto[i].vetor_linha[j].dirty);
+            if (vetor_conjunto[i].vetor_linha[j].valido == 0)
+                printf("---");
             else
-                bin(vetor_linha[i].rotulo, 6);
-            printf("] ");
-            for (int j = 0; j < 4; j++)
+                bin(vetor_conjunto[i].vetor_linha[j].rotulo, 3);
+            printf("  | ");
+
+            for (int k = 0; k < 4; k++)
             {
                 printf("|");
-                if(vetor_linha[i].vet1[j]==-1)
-                	printf("----------");
+                if (vetor_conjunto[i].vetor_linha[j].valido == 0)
+                    printf("--------");
                 else
-                	bin(vetor_linha[i].vet1[j], 7);
+                    bin(vetor_conjunto[i].vetor_linha[j].vet1[k], 8);
                 printf("| ");
             }
-            printf("[");
-            bin(i, 3);
-            printf("]");
+            printf("| ");
+            bin(i*2+j, 3); //linha
+            printf(" | |   ");
+            bin(i, 2); //conjunto
+            printf("    |");
+            puts("");
         }
-        printf("\n\n---------------------------------------------------------------");
-        while (j < 8)
+    }
+    printf("\n\n------------------------------------------------------------------");
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 2; j++)
         {
-        	for(int i=0; i < 2; i++)
-        	{
-	            if (vetor_linha[j+i].pol_sub == 0)
-	            {
-	                printf("\nProxima localizacao: Linha [");
-	                bin(j+i, 3);
-	                printf("]");
-	                break;
-	            }
-	        }
-	        j+=2;
+            if (vetor_conjunto[i].vetor_linha[j].pol_sub == 0)
+            {
+                printf("\nProxima localizacao: Linha [");
+                bin(i*2 + j, 3);
+                printf("] - ");
+                printf("Conjunto [");
+                bin(i, 2);
+                printf("]");
+                break;
+            }
         }
-        puts("\n---------------------------------------------------------------");
+    }
+    puts("\n------------------------------------------------------------------");
+}
+
+void main(void)
+{
+    struct conjunto vetor_conjunto[4];
+    struct bloco vetor_bloco[32]; 
+    int int_conjunto, int_rotulo, acertos_leitura, acertos_escrita, faltas_leitura, faltas_escrita, op;
+    char bits_endereco[7], bits_conjunto[2], bits_rotulo[3];
+    for (int i = 0; i < 32; i++){
+        for (int j = 0;  j < 4; j++)
+        {
+        	vetor_bloco[i].vet2[j] = rand() % 256;
+    	}
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0;  j < 2; j++)
+        {
+            vetor_conjunto[i].vetor_linha[j].pol_sub = 0;
+            vetor_conjunto[i].vetor_linha[j].valido = 0;
+            vetor_conjunto[i].vetor_linha[j].dirty = 0;
+        }
+    }
+   	print_mem(vetor_bloco, vetor_conjunto);
+
+    do
+    {
         puts("\n\t\t\tMENU\n");
         puts("(1) Para ler o conteudo de um endereco da memoria;");
         puts("(2) Para escrever em um determinado endereco da memoria;");
@@ -121,33 +150,28 @@ void main()
         {
         case 1:
             printf("\nDigite o endereco desejado a ser lido:\n");
-            scanf("%s", &endereco);
-            dec(7,endereco);
+            scanf("%s", &bits_endereco);
             //0 0 0 0 1 0 1
-            linha[0]=endereco[3];
-            linha[1]=endereco[4];
-            rotulo2[0] = endereco[0];
-            rotulo2[1] = endereco[1];
-            rotulo2[2] = endereco[2];
-            linha2 = dec(2,linha);
-            linha2 %= 2;
-        	printf("Linha2: %d", linha2);
-            rotulo3 = dec(3,rotulo2);
-        	for(int i=0; i < 2; i++)
-        	{
-        		if(vetor_linha[linha2+i].rotulo==rotulo3){
-		            if (vetor_linha[linha2+i].pol_sub == 0)
-		            {
-		            	printf("nada\n");
-		            }
-	        	}
-	        }
+            bits_conjunto[0] = bits_endereco[3];
+            bits_conjunto[1] = bits_endereco[4];
+            bits_rotulo[0] = bits_endereco[0];
+            bits_rotulo[1] = bits_endereco[1];
+            bits_rotulo[2] = bits_endereco[2];
+            int_conjunto = dec(2, bits_conjunto);
+            int_conjunto %= 2;
+            int_rotulo = dec(3, bits_rotulo);
+            // pega conjunto, num linha,
+            for (int i = 0; i < 4; i++)
+            {
+                
+            }
 
             break;
         case 2:
-            printf("\nDigite o endereco desejado a ser lido:\n");
-            scanf("%s", &endereco);
-            dec(7,endereco);
+            printf("\nDigite o endereco do dado desejado a ser escrito:\n");
+            scanf("%s", &bits_endereco);
+            dec(7, bits_endereco);
+            printf("\nDigite o conteudo do dado desejado a ser escrito:\n");
 
             break;
         case 3:
