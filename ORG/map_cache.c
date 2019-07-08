@@ -35,9 +35,9 @@ int dec(int bits, char num[bits], int inicial)
 
 int dec_to_dec(int bits, int decimal, int inicial)
 {
-	int x;
-	char bin[bits];
-    for (int aux = bits-1; aux >= 0; aux--)
+    int x;
+    char bin[bits];
+    for (int aux = bits - 1; aux >= 0; aux--)
     {
         if (decimal % 2 == 0)
             bin[aux] = '0';
@@ -45,7 +45,7 @@ int dec_to_dec(int bits, int decimal, int inicial)
             bin[aux] = '1';
         decimal /= 2;
     }
-    return x = dec(bits,bin,inicial);
+    return x = dec(bits, bin, inicial);
 }
 
 void bin(int num, int bits)
@@ -74,8 +74,8 @@ void print_mem(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4])
             bin(i * 4 + j, 7);
             printf("]: ");
             bin(vetor_bloco[i].vet2[j], 8);
-        	if (j % 2 == 1)
-            	printf("\n");
+            if (j % 2 == 1)
+                printf("\n");
         }
     }
     puts("\n\n-------------------------------------------------------------------------------------------------");
@@ -85,7 +85,7 @@ void print_mem(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4])
     {
         for (int j = 0; j < 2; j++)
         {
-        	printf("|");
+            printf("|");
             bin(vetor_conjunto[i].vetor_linha[j].pol_sub, 3);
             printf("| |   %d  |", vetor_conjunto[i].vetor_linha[j].valido);
             printf(" |  %d  | |  ", vetor_conjunto[i].vetor_linha[j].dirty);
@@ -132,7 +132,7 @@ void print_mem(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4])
 
 void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4], double acertos_leitura[1], double acertos_escrita[1], double faltas_leitura[1], double faltas_escrita[1], int tipo)
 {
-    int soma_endereco=0, int_conjunto, int_deslocamento, int_rotulo, int_bloco, int_endereco, int_dado, dirty, x = 0, linha_enc, int_rotulo3, int_linha3, int_vet3;
+    int soma_endereco = 0, int_conjunto, int_deslocamento, int_rotulo, int_bloco, int_endereco, int_dado, dirty, x = 0, linha_enc, int_rotulo3, int_linha3, int_vet3;
     double porc;
     char bits_endereco[7], bits_dado[8], bits_conjunto[2], bits_rotulo[3], bits_deslocamento[2];
 
@@ -185,14 +185,14 @@ void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4]
         {
             if (vetor_conjunto[int_conjunto].vetor_linha[i].pol_sub == 0)
             {
-                soma_endereco += dec_to_dec(3,vetor_conjunto[int_conjunto].vetor_linha[i].rotulo,16);
-                soma_endereco += dec_to_dec(2,int_conjunto,4);
-                printf("bloco %d\n", soma_endereco);
+                soma_endereco += dec_to_dec(3, vetor_conjunto[int_conjunto].vetor_linha[i].rotulo, 16);
+                soma_endereco += dec_to_dec(2, int_conjunto, 4);
+                soma_endereco /= 4;
                 for (int j = 0; j < 4; j++)
                 {
                     if (vetor_conjunto[int_conjunto].vetor_linha[i].dirty == 1)
-                    { 
-                    	vetor_bloco[soma_endereco].vet2[j] = vetor_conjunto[int_conjunto].vetor_linha[i].vet1[j];
+                    {
+                        vetor_bloco[soma_endereco].vet2[j] = vetor_conjunto[int_conjunto].vetor_linha[i].vet1[j];
                         dirty = 0;
                     }
                     vetor_conjunto[int_conjunto].vetor_linha[i].vet1[j] = vetor_bloco[int_bloco].vet2[j];
