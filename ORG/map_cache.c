@@ -293,9 +293,9 @@ void main(void)
             printf("\n\tAcertos (leitura): %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_leitura[0], porc);
             porc = (faltas_leitura[0] / (acertos_leitura[0] + faltas_leitura[0])) * 100;
             printf("\tFaltas (leitura):  %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_leitura[0], porc);
-            porc = (acertos_escrita[0] / (acertos_leitura[0] + faltas_leitura[0])) * 100;
+            porc = (acertos_escrita[0] / (acertos_escrita[0] + faltas_escrita[0])) * 100;
             printf("\n\tAcertos (escrita): %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_escrita[0], porc);
-            porc = (faltas_escrita[0] / (acertos_leitura[0] + faltas_leitura[0])) * 100;
+            porc = (faltas_escrita[0] / (acertos_escrita[0] + faltas_escrita[0])) * 100;
             printf("\tFaltas (escrita):  %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_escrita[0], porc);
             porc = ((acertos_escrita[0] + acertos_leitura[0]) / (acertos_leitura[0] + acertos_escrita[0] + faltas_escrita[0] + faltas_leitura[0])) * 100;
             printf("\n\tAcertos (geral):   %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_escrita[0] + acertos_leitura[0], porc);
