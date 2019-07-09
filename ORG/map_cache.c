@@ -132,7 +132,7 @@ void print_mem(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4])
 
 void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4], double acertos_leitura[1], double acertos_escrita[1], double faltas_leitura[1], double faltas_escrita[1], int tipo)
 {
-    int soma_endereco = 0, int_conjunto, int_deslocamento, int_rotulo, int_bloco, int_endereco, int_dado, dirty, x = 0, linha_enc, int_rotulo3, int_linha3, int_vet3;
+    int soma_endereco = 0, int_conjunto, int_deslocamento, int_rotulo, int_bloco, int_endereco, int_dado, dirty, x = 0, linha_enc_cache, linha_enc_conjunto;
     double porc;
     char bits_endereco[7], bits_dado[8], bits_conjunto[2], bits_rotulo[3], bits_deslocamento[2];
 
@@ -161,13 +161,13 @@ void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4]
             if (vetor_conjunto[int_conjunto].vetor_linha[i].rotulo == int_rotulo)
             {
                 x = 1;
-                linha_enc = int_conjunto * 2 + i;
+                linha_enc_cache = int_conjunto * 2 + i;
+                linha_enc_conjunto = i;
                 vetor_conjunto[int_conjunto].vetor_linha[i].pol_sub = 1;
                 if (i == 1)
                     vetor_conjunto[int_conjunto].vetor_linha[i - 1].pol_sub = 0;
                 else
                     vetor_conjunto[int_conjunto].vetor_linha[i + 1].pol_sub = 0;
-
                 break;
             }
         }
@@ -177,10 +177,8 @@ void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4]
     if (x == 0)
     {
         printf("\nEndereco não encontrado na cache!\n");
-        if (tipo == 0)
+        if(tipo == 0)
             faltas_leitura[0]++;
-        else
-            faltas_escrita[0]++;
         for (int i = 0; i < 2; i++)
         {
             if (vetor_conjunto[int_conjunto].vetor_linha[i].pol_sub == 0)
@@ -203,7 +201,8 @@ void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4]
                 vetor_conjunto[int_conjunto].vetor_linha[i].valido = 1;
                 vetor_conjunto[int_conjunto].vetor_linha[i].pol_sub = 1;
                 vetor_conjunto[int_conjunto].vetor_linha[i].rotulo = int_rotulo;
-                linha_enc = int_conjunto * 2 + i;
+                linha_enc_cache = int_conjunto * 2 + i;
+                linha_enc_conjunto = i;
 
                 if (i == 1)
                     vetor_conjunto[int_conjunto].vetor_linha[i - 1].pol_sub = 0;
@@ -216,16 +215,14 @@ void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4]
     else
     {
         printf("\nEndereco encontrado na cache!\n");
-        if (tipo == 0)
+        if(tipo == 0)
             acertos_leitura[0]++;
-        else
-            acertos_escrita[0]++;
     }
-    printf("Numero do bloco: ");
+    printf("Numero do bloco a que se refere o endereço: ");
     bin(int_bloco, 5);
-    printf("\nQuadro da cache: ");
-    bin(linha_enc, 3);
-    printf("\nDeslocamento: %c", bits_deslocamento[0]);
+    printf("\nQuadro da cache em que esta mapeado: ");
+    bin(linha_enc_cache, 3);
+    printf("\nDeslocamento no quadro: %c", bits_deslocamento[0]);
     printf("%c\n", bits_deslocamento[1]);
 
     if (tipo == 1)
@@ -233,13 +230,19 @@ void ender_cache(struct bloco vetor_bloco[32], struct conjunto vetor_conjunto[4]
         printf("\nDigite o conteudo do dado desejado a ser escrito:\n");
         scanf("%s", &bits_dado);
         int_dado = dec(8, bits_dado, 1);
-        for (int i = 0; i < 2; i++)
+        if (vetor_conjunto[int_conjunto].vetor_linha[linha_enc_conjunto].rotulo == int_rotulo)
         {
-            if (vetor_conjunto[int_conjunto].vetor_linha[i].rotulo == int_rotulo)
+            if (vetor_conjunto[int_conjunto].vetor_linha[linha_enc_conjunto].vet1[int_deslocamento] != int_dado)
             {
-                vetor_conjunto[int_conjunto].vetor_linha[i].vet1[int_deslocamento] = int_dado;
-                vetor_conjunto[int_conjunto].vetor_linha[i].dirty = 1;
-                break;
+                vetor_conjunto[int_conjunto].vetor_linha[linha_enc_conjunto].vet1[int_deslocamento] = int_dado;
+                vetor_conjunto[int_conjunto].vetor_linha[linha_enc_conjunto].dirty = 1;
+                printf("\nDado não encontrado na cache!\n");
+                faltas_escrita[0]++;
+            }
+            else
+            {
+                printf("\nDado encontrado na cache!\n");
+                acertos_escrita[0]++;
             }
         }
     }
@@ -274,7 +277,7 @@ void main(void)
         puts("\t\t\t(1) Para ler o conteudo de um endereco da memoria;");
         puts("\t\t\t(2) Para escrever em um determinado endereco da memoria;");
         puts("\t\t\t(3) Para apresentar as estatisticas de acertos e faltas;");
-        puts("\t\t\t(0) Para sair.\n");
+        puts("\t\t\t(0) Para encerrar o programa.\n");
         printf("\t\t\tDigite o numero correspondente a opcao: ");
         scanf("%d", &op);
         switch (op)
@@ -288,19 +291,19 @@ void main(void)
 
             break;
         case 3:
-            printf("\n\t\t\tESTATISTICAS:\n");
+            printf("\n\t\t\t\t\t\tESTATISTICAS:\n");
             porc = (acertos_leitura[0] / (acertos_leitura[0] + faltas_leitura[0])) * 100;
-            printf("\n\tAcertos (leitura): %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_leitura[0], porc);
+            printf("\n\t\t\tAcertos (leitura): %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_leitura[0], porc);
             porc = (faltas_leitura[0] / (acertos_leitura[0] + faltas_leitura[0])) * 100;
-            printf("\tFaltas (leitura):  %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_leitura[0], porc);
+            printf("\t\t\tFaltas (leitura):  %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_leitura[0], porc);
             porc = (acertos_escrita[0] / (acertos_escrita[0] + faltas_escrita[0])) * 100;
-            printf("\n\tAcertos (escrita): %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_escrita[0], porc);
+            printf("\n\t\t\tAcertos (escrita): %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_escrita[0], porc);
             porc = (faltas_escrita[0] / (acertos_escrita[0] + faltas_escrita[0])) * 100;
-            printf("\tFaltas (escrita):  %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_escrita[0], porc);
+            printf("\t\t\tFaltas (escrita):  %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_escrita[0], porc);
             porc = ((acertos_escrita[0] + acertos_leitura[0]) / (acertos_leitura[0] + acertos_escrita[0] + faltas_escrita[0] + faltas_leitura[0])) * 100;
-            printf("\n\tAcertos (geral):   %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_escrita[0] + acertos_leitura[0], porc);
+            printf("\n\t\t\tAcertos (geral):   %.0lf (absoluto) | %.2lf (porcentagem)\n", acertos_escrita[0] + acertos_leitura[0], porc);
             porc = ((faltas_escrita[0] + faltas_leitura[0]) / (acertos_leitura[0] + acertos_escrita[0] + faltas_escrita[0] + faltas_leitura[0])) * 100;
-            printf("\tFaltas (geral):    %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_escrita[0] + faltas_leitura[0], porc);
+            printf("\t\t\tFaltas (geral):    %.0lf (absoluto) | %.2lf (porcentagem)\n", faltas_escrita[0] + faltas_leitura[0], porc);
             break;
         case 0:
             system("clear");
