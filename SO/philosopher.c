@@ -26,14 +26,15 @@ sem_t s;
 
 int main(void)
 {
-    for (int i = 0; i < N; i++)
-    {
-        state[i] = 0;
-        phil_sem[i] = 0;
-    }
+    int i = 0;
+    
+    // for (i = 0; i < N; i++)
+    // {
+    //     state[i] = 0;
+    //     phil_sem[i] = 0;
+    // }
 
     pthread_t philosopher[N];
-    int i = 0;
 
     sem_init(&s, 0, 1); // inicializa o semáforo com valor 1
 
