@@ -8,25 +8,27 @@
 #define WIDTH 500
 #define HEIGHT 500
 
-float x1 = -0.9;
+float x1 = -0.99;
 
-float x2 = 0.9;
+float x2 = 0.1;
 
 float sentido = 1;
 
-
-int main() {
-	GLFWwindow* window;
+int main()
+{
+	GLFWwindow *window;
 	int width, height;
 
-	if (!glfwInit()) {
+	if (!glfwInit())
+	{
 		std::cout << "Problem to initialize GLFW" << std::endl;
 		exit(1);
 	}
-	
+
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Hello world, GLFW!", NULL, NULL);
 
-	if (!window) {
+	if (!window)
+	{
 		std::cout << "Problem to create GLFW window" << std::endl;
 		glfwTerminate();
 		exit(1);
@@ -34,63 +36,94 @@ int main() {
 
 	glfwMakeContextCurrent(window);
 
-	while(glfwWindowShouldClose(window) == 0 && glfwGetKey(window, GLFW_KEY_ESCAPE) == 0) {
+	while (glfwWindowShouldClose(window) == 0 && glfwGetKey(window, GLFW_KEY_ESCAPE) == 0)
+	{
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glfwGetFramebufferSize(window, &width, &height);
 		glViewport(0, 0, width, height);
 
-		if(x1+0.2 >= 0.9){
-			sentido= -1;
-			x1 = 0.7;
-			x2 = -0.9;
+		if (x1 + 0.6 >= 0.99)
+		{
+			sentido = -1;
+			//x1 = 1;
 		}
-		if(x1 <= -0.9){
-			sentido= 1;
-			x1 = -0.9;
-			x2 = 0.7;
+		if (x1 <= -0.9)
+		{
+			sentido = 1;
+			//x1 = -1;
 		}
-
-		x1 = x1 + 0.015*sentido;
-		x2 = x2 - 0.015*sentido;
+		x1 = x1 + 0.0002 * sentido;
 
 		glBegin(GL_LINES);
-			glColor3f(1.f, 0.f, 0.f);
+		// green
+		glColor3f(0.0f, 1.0f, 0.0f);
 
-			glVertex3f(x2, -0.3f, 0.f);
-			glVertex3f(x2+0.2, -0.3f, 0.f);
+		// linha vertical
+		glVertex3f(x1, -0.1f, 0.f);
+		glVertex3f(x1, 0.3f, 0.f);
 
-			glVertex3f(x2, -0.1f, 0.f);
-			glVertex3f(x2+0.2, -0.1f, 0.f);
+		// linha horizontal
+		glVertex3f(x1, 0.3f, 0.f);
+		glVertex3f(x1 + 0.4, 0.3f, 0.f);
 
-			glVertex3f(x2, -0.3f, 0.f);
-			glVertex3f(x2, -0.1f, 0.f);
+		// linha horizontal
+		glVertex3f(x1, -0.1f, 0.f);
+		glVertex3f(x1 + 0.4, -0.1f, 0.f);
 
-			glVertex3f(x2+0.2, -0.3f, 0.f);
-			glVertex3f(x2+0.2, -0.1f, 0.f);
+		// linha vertical
+		glVertex3f(x1 + 0.4, -0.1f, 0.f);
+		glVertex3f(x1 + 0.4, 0.3f, 0.f);
 
+		// red
+		glColor3f(1.0f, 0.0f, 0.0f);
 
-			glColor3f(0.f, 1.f, 0.f);
+		// linha vertical
+		glVertex3f(x1 + 0.6, 0.1f, 0.f);
+		glVertex3f(x1 + 0.6, 0.5f, 0.f);
 
-			glVertex3f(x1, 0.3f, 0.f);
-			glVertex3f(x1+0.2, 0.3f, 0.f);
+		// linha vertical
+		glVertex3f(x1 + 0.2, 0.5f, 0.f);
+		glVertex3f(x1 + 0.2, 0.1f, 0.f);
 
-			glVertex3f(x1, 0.1f, 0.f);
-			glVertex3f(x1+0.2, 0.1f, 0.f);
+		// linha horizontal
+		glVertex3f(x1 + 0.6, 0.1f, 0.f);
+		glVertex3f(x1 + 0.2, 0.1f, 0.f);
 
-			glVertex3f(x1, 0.1f, 0.f);
-			glVertex3f(x1, 0.3f, 0.f);
+		// linha horizontal
+		glVertex3f(x1 + 0.6, 0.5f, 0.f);
+		glVertex3f(x1 + 0.2, 0.5f, 0.f);
 
-			glVertex3f(x1+0.2, 0.1f, 0.f);
-			glVertex3f(x1+0.2, 0.3f, 0.f);
+		// blue
+		glColor3f(0.0f, 0.0f, 1.0f);
+
+		// linha diagonal
+		glVertex3f(x1 + 0.6, 0.1f, 0.f);
+		glVertex3f(x1 + 0.4, -0.1f, 0.f);
+
+		// linha diagonal
+		glVertex3f(x1 + 0.6, 0.5f, 0.f);
+		glVertex3f(x1 + 0.4, 0.3f, 0.f);
+
+		// linha diagonal
+		glVertex3f(x1 + 0.2, 0.1f, 0.f);
+		glVertex3f(x1, -0.1f, 0.f);
+
+		// linha diagonal
+		glVertex3f(x1 + 0.2, 0.5f, 0.f);
+		glVertex3f(x1, 0.3f, 0.f);
+
+		glfwDisplayFunc(window);
+		glfwIdleFunc(window);
 		glEnd();
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-    glfwDestroyWindow(window);
+	glfwDestroyWindow(window);
 	glfwTerminate();
 
 	return 0;
