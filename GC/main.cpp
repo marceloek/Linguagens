@@ -3,6 +3,8 @@
  */
 
 #include <iostream>
+#include <GL/glut.h>
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
 #define WIDTH 500
@@ -13,6 +15,8 @@ float x1 = -0.99;
 float x2 = 0.1;
 
 float sentido = 1;
+
+GLfloat rx = 0;
 
 int main()
 {
@@ -44,17 +48,18 @@ int main()
 		glfwGetFramebufferSize(window, &width, &height);
 		glViewport(0, 0, width, height);
 
-		if (x1 + 0.6 >= 0.99)
-		{
-			sentido = -1;
-			//x1 = 1;
-		}
-		if (x1 <= -0.9)
-		{
-			sentido = 1;
-			//x1 = -1;
-		}
-		x1 = x1 + 0.0002 * sentido;
+		// if (x1 + 0.6 >= 0.99)
+		// {
+		// 	sentido = -1;
+		// 	//x1 = 1;
+		// }
+		// if (x1 <= -0.9)
+		// {
+		// 	sentido = 1;
+		// 	//x1 = -1;
+		// }
+		// x1 = x1 + 0.0002 * sentido;
+
 
 		glBegin(GL_LINES);
 		// green
@@ -76,48 +81,48 @@ int main()
 		glVertex3f(x1 + 0.4, -0.1f, 0.f);
 		glVertex3f(x1 + 0.4, 0.3f, 0.f);
 
+
+		glScalef(4, 4, 4);
+
 		// red
 		glColor3f(1.0f, 0.0f, 0.0f);
 
-		// linha vertical
+		// // linha vertical
 		glVertex3f(x1 + 0.6, 0.1f, 0.f);
 		glVertex3f(x1 + 0.6, 0.5f, 0.f);
 
-		// linha vertical
+		// // linha vertical
 		glVertex3f(x1 + 0.2, 0.5f, 0.f);
 		glVertex3f(x1 + 0.2, 0.1f, 0.f);
 
-		// linha horizontal
+		// // linha horizontal
 		glVertex3f(x1 + 0.6, 0.1f, 0.f);
 		glVertex3f(x1 + 0.2, 0.1f, 0.f);
 
-		// linha horizontal
+		// // linha horizontal
 		glVertex3f(x1 + 0.6, 0.5f, 0.f);
 		glVertex3f(x1 + 0.2, 0.5f, 0.f);
 
-		// blue
+		// // blue
 		glColor3f(0.0f, 0.0f, 1.0f);
 
-		// linha diagonal
+		// // linha diagonal
 		glVertex3f(x1 + 0.6, 0.1f, 0.f);
 		glVertex3f(x1 + 0.4, -0.1f, 0.f);
 
-		// linha diagonal
+		// // linha diagonal
 		glVertex3f(x1 + 0.6, 0.5f, 0.f);
 		glVertex3f(x1 + 0.4, 0.3f, 0.f);
 
-		// linha diagonal
+		// // linha diagonal
 		glVertex3f(x1 + 0.2, 0.1f, 0.f);
 		glVertex3f(x1, -0.1f, 0.f);
 
-		// linha diagonal
+		// // linha diagonal
 		glVertex3f(x1 + 0.2, 0.5f, 0.f);
 		glVertex3f(x1, 0.3f, 0.f);
 
-		glfwDisplayFunc(window);
-		glfwIdleFunc(window);
 		glEnd();
-
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
