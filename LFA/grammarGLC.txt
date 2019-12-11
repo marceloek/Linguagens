@@ -1,0 +1,36 @@
+"Case Sensitive" = False
+"Start Symbol" = <S>
+
+<S> ::= 'a'<id> | 'b'<id> | 'c'<id> | 'd'<id> | 'e'<id> | 'f'<id> | 'g'<id> | 'h'<id> | 'i'<id> | 'j'<id> | 'k'<id> | 'l'<id> | 'm'<id> | 'n'<id> | 'o'<id> | 'p'<id> | 'q'<id> | 'r'<id> | 's'<id> | 't'<id> | 'u'<id> | 'v'<id> | 'w'<id> | 'x'<id> | 'y'<id> | 'z'<id> | '0'<num> | '1'<num> | '2'<num> | '3'<num> | '4'<num> | '5'<num> | '6'<num> | '7'<num> | '8'<num> | '9'<num> | ','<simb> | ';'<simb> | '+'<op> | '-'<op> | '/'<op> | '*'<op> | '='<igual> | '}'<poprel> | '{'<poprel> | '!'<not>
+
+<id> ::= 'a'<id> | 'b'<id> | 'c'<id> | 'd'<id> | 'e'<id> | 'f'<id> | 'g'<id> | 'h'<id> | 'i'<id> | 'j'<id> | 'k'<id> | 'l'<id> | 'm'<id> | 'n'<id> | 'o'<id> | 'p'<id> | 'q'<id> | 'r'<id> | 's'<id> | 't'<id> | 'u'<id> | 'v'<id> | 'w'<id> | 'x'<id> | 'y'<id> | 'z'<id> | '0'<num> | '1'<num> | '2'<num> | '3'<num> | '4'<num> | '5'<num> | '6'<num> | '7'<num> | '8'<num> | '9'<num> | eps ','<simb> | ';'<simb> | '+'<op> | '-'<op> | '/'<op> | '*'<op> 
+
+<num> ::= '0'<num> | '1'<num> | '2'<num> | '3'<num> | '4'<num> | '5'<num> | '6'<num> | '7'<num> | '8'<num> | '9'<num> | 'eps'
+
+<simb> ::= 'eps'
+
+<op> ::= 'eps'
+      
+<oprel> ::= 'eps'
+
+<poprel> ::= '='<oprel> | 'eps'
+
+<not> ::= '='<oprel> | <op>
+
+<igual> ::= '='<oprel> | <op>
+
+int
+
+se
+
+entao
+
+senao
+
+enquanto
+
+fim
+
+fimse
+
+fimenquanto
