@@ -1,0 +1,17 @@
+"Case Sensitive" = False
+"Start Symbol" = <S>
+<S> ::= <var> <ops>
+     
+<var> ::= '*46' 'equal' '*46' <var> | '*46' 'equal' '*47' <var>| <>
+
+<oprel> ::= 'sum''*47' | 'sub''*47' | 'div''*47' | 'mult''*47' | 'sum' '*46' | 'sub' '*46' | 'div' '*46' | 'mult' '*46' | 'equal'<igual> | <>
+
+<ops> ::= <if> | <while> | <>
+
+<if> ::= 'if'  '*46'<oprel> 'obracers' <var><ops> 'cbracers' <else>
+
+<else> ::= 'else' 'obracers' <var><ops> 'cbracers'
+
+<while> ::= 'while' '*46'<oprel> 'obracers' <var><ops> 'cbracers'
+
+<igual> ::= 'equal' '*46' | '*46' | 'equal' '*47' | '*47'
