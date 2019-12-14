@@ -1,6 +1,5 @@
 #Compilador
 #Academicos: Marcio J. Rios e Marcelo E. Knob
-#github: marciojrios 
 #Universidade Federal da Fronteira Sul- UFFS - Compiladores
 
 import csv
