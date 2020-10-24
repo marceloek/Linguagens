@@ -59,7 +59,7 @@ void test(int i)
 {
     if (state[i] == hungry && state[left] != eating && state[right] != eating)
     {
-        state[2] = hungry;
+        state[i] = eating;
         sleep(1);
         printf("Filosofo %d agarrou os garfos %d e %d.\n", i, left, right);
         printf("Filosofo %d esta a comer.\n", i);
@@ -73,7 +73,7 @@ int main(void)
     pthread_t philosopher[N];
     sem_init(&mutex, 0, 1); // inicializa o semáforo com valor 1
     for (i = 0; i < N; i++)
-        sem_init(&phil_sem[i], 0, 0); // inicializa o semáforo com valor 1
+        sem_init(&phil_sem[i], 0, 0); // inicializa o semáforo com valor 0
     for (i = 0; i < N; i++)
     {
         int *j = malloc(sizeof(int));
