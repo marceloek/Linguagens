@@ -1,0 +1,14 @@
+A implementação relativa à primeira etapa deve contemplar:
+
+- Especificação e definição das mensagens;
+
+- Interpretação dos arquivos de configuração (roteador.config e enlaces.config);
+
+- Comunicação entre vizinhos: envio e recepção de mensagens entre vizinhos;
+
+- Procurar estruturar o sistema utilizando threads. Por exemplo: uma thread principal com a interface para o menu do sistema;
+outra thread responsável pela recepção das mensagens; outra thread responsável pelo envio das mensagens. OBS.: qualquer
+recurso (e.g., variáveis, estruturas de dados) compartilhado entre as threads deve ser tratado considerando exclusão mútua
+(i.e., utilizar mutexes).
+
+Prazo de entrega: 25/10

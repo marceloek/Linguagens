@@ -1,0 +1,37 @@
+Marcelo Elias Knob
+
+
+O CÓDIGO:
+
+No diretório raíz temos o arquivo 'roteador.c', o qual vai ser compilado e executado;
+
+No diretório '/configs' contém os arquivos de configuração: 'enlaces.config' e 'roteador.config';
+
+No diretório '/headers' contém o arquivo com as structs utilizadas: 'structs.h'.
+
+Para compilar o código:
+
+$ gcc roteador.c -lpthread -o nome_do_arquivo
+
+Para executar o código (na qual 'id' representa o id do roteador): 
+$ ./nome_do_arquivo id
+
+
+O PROGRAMA:
+
+Caso não passe o valor do id do roteador quando executou o programa, ele pedirá para o usuário digitar o id do roteador atual. 
+
+Em seguida, solicitará que digite o id do roteador para o qual será enviada a mensagem de acordo com os roteadores configurados nos arquivos de configuração.
+
+Depois solicitará que digite a mensagem de até 100 dígitos.
+
+
+FUNCIONAMENTO:
+
+2 threads são utilizadas: uma para o menu / envio de mensagens e outra para o recebimento;
+
+Quando uma mensagem é recebida por um roteador será encaminhada uma mensagem de confirmação contendo o horário;
+
+Caso uma mensagem não tem confirmação de recebimento após x tempo, é reencaminhada a mensagem;
+
+Cada mensagem tem um limite de 3 tentativas para recebimento de confirmação, caso o limite seja atingido, a transmissão da mensagem é cancelada.
