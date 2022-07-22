@@ -1,7 +1,0 @@
-
-mosquitto.conf
-adicionei listener
-
-habilitei a porta 1883 do ufw (firewall)
-
-habilito o mosquitto service quando vou utiliza-lo.
