@@ -1,7 +1,7 @@
 #!/bin/bash
 
-INIT=1658720900
-DELAY=2
+INIT=1658723131
+DELAY=15
 
 START=1
 END=5
@@ -10,18 +10,23 @@ TIMESTAMP=$(date +%s)
 echo $TIMESTAMP
 
 DIFF=$(($INIT - $TIMESTAMP))
+
 echo "sleep $DIFF"
 if [ $DIFF -lt 1 ]; then
+    echo "Erro de timestamp"
     exit 1
 fi
 sleep $DIFF
 
 echo "START"
-TIMESTAMP=$(date +%s)
+TIMESTAMP=$INIT
+
+cd "/home/marceloek/Desktop/mqttloader/"
 
 for i in $( seq $START $END); do
 
     echo $i;
+    ./bin/mqttloader -c mqttloader_sub.conf
 
     DIFF=$(($i * $DELAY))
     DIFF=$(($TIMESTAMP + $DIFF))
