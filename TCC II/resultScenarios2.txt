@@ -1,0 +1,60 @@
+
+Scenario: [1]
+666.67, 620.53
+Number Messages [1]: 46.13 ms
+2127.93, 1952.83
+Number Messages [3]: 175.1 ms
+6902.2, 6305.03
+Number Messages [14]: 597.17 ms
+23320.83, 21024.23
+Number Messages [50]: 2296.6 ms
+
+Scenario: [2]
+718.0, 620.13
+Number Messages [1]: 97.87 ms
+2329.47, 1956.8
+Number Messages [3]: 372.67 ms
+8263.53, 6320.5
+Number Messages [14]: 1943.03 ms
+28629.13, 21061.3
+Number Messages [50]: 7567.83 ms
+
+Scenario: [3]
+702.7, 578.47
+Number Messages [1]: 124.23 ms
+2407.73, 1973.07
+Number Messages [3]: 434.67 ms
+8405.17, 7000.6
+Number Messages [14]: 1404.57 ms
+28839.13, 24256.57
+Number Messages [50]: 4582.57 ms
+
+Scenario: [4]
+823.2, 578.77
+Number Messages [1]: 244.43 ms
+2791.8, 1974.03
+Number Messages [3]: 817.77 ms
+9861.23, 6849.6
+Number Messages [14]: 3011.63 ms
+34474.57, 23951.73
+Number Messages [50]: 10522.83 ms
+
+Scenario: [5]
+615.17, 621.47
+Number Messages [1]: -6.3 ms
+1954.83, 1938.83
+Number Messages [3]: 16.0 ms
+6245.47, 6262.0
+Number Messages [14]: -16.53 ms
+20819.3, 20926.63
+Number Messages [50]: -107.33 ms
+
+Scenario: [6]
+580.7, 574.53
+Number Messages [1]: 6.17 ms
+1966.23, 1958.97
+Number Messages [3]: 7.27 ms
+6874.07, 6947.73
+Number Messages [14]: -73.67 ms
+24072.13, 23979.43
+Number Messages [50]: 92.7 ms
